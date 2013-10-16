@@ -13,7 +13,7 @@ xblog
 <p>xBlog开发者QQ群:  202115979
 <p><p>作者: xSky        
 <p>博客: <a href="http://www.0xsky.com/">xSky's Blog</a>
-
+<hr>
 
 <p>安装 xBlog
 <p>--------------
