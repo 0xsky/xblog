@@ -11,4 +11,5 @@ xblog
 <p>
 <p>demo: <a href="http://lab.0xsky.com/">xSky的实验室</a>   <a href="http://lab.0xsky.com/admin">测试后台</a>
 <p>xBlog开发者QQ群:  202115979
-<p><p>作者：xSky        <a href="http://www.0xsky.com/">xSky's Blog</a>
+<p><p>作者: xSky        
+<p>博客: <a href="http://www.0xsky.com/">xSky's Blog</a>
