@@ -10,7 +10,7 @@
 #ifndef _MYSQL_POOL_H_
 #define _MYSQL_POOL_H_
 
-const uint32 MAX_CONNECTION_NUM = 128;
+const int MAX_CONNECTION_NUM = 128;
 
 //////////////////////////////////////////////////////////////////////
 #ifdef WIN32
