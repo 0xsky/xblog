@@ -15,15 +15,14 @@ xblog
 <p>博客: <a href="http://www.0xsky.com/">xSky's Blog</a>
 <hr>
 
-<p>安装 xBlog
-<p>--------------
-<p> 1.安装 libevent
-<p>   yum install libevent or apt-get install libevent-dev
-<p> 2.编译 xblog
-<p>   svn co https://github.com/0xsky/xblog.git xblog
-<p>   make
-<p> 3.配置&运行
-<p>   将 /doc 目录内的 xblog_dev.sql 导入到MYSQL数据库
-<p>   修改 xblog.ini 内配置
-<p>   ./xBlog.sh start
+###安装 xBlog
+    1.安装 libevent
+      yum install libevent or apt-get install libevent-dev
+    2.编译 xblog
+      svn co https://github.com/0xsky/xblog.git xblog
+      make
+    3.配置&运行
+      将 /doc 目录内的 xblog_dev.sql 导入到MYSQL数据库
+      修改 xblog.ini 内配置
+      ./xBlog.sh start
 
