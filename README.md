@@ -10,14 +10,20 @@ xblog
 <p>多平台: C/C++开发，完美支持LINUX，WINDOWS，Raspberry Pi 等平台。.
 <p>
 <p>demo: <a href="http://lab.0xsky.com/">xSky的实验室</a>   <a href="http://lab.0xsky.com/admin">测试后台</a>
-<p>xBlog开发者QQ群:  202115979
+<p>xBlog爱好者QQ群:  202115979
 <p><p>作者: xSky        
 <p>博客: <a href="http://www.0xsky.com/">xSky's Blog</a>
 <hr>
 
 <p>安装 xBlog
 <p>--------------
-<p> svn co https://github.com/0xsky/xblog.git xblog
-<p> make
-
+<p> 1.安装 libevent
+<p>   yum install libevent or apt-get install libevent-dev
+<p> 2.编译 xblog
+<p>   svn co https://github.com/0xsky/xblog.git xblog
+<p>   make
+<p> 3.配置&运行
+<p>   将 /doc 目录内的 xblog_dev.sql 导入到MYSQL数据库
+<p>   修改 xblog.ini 内配置
+<p>   ./xBlog.sh start
 
