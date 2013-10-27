@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+
+/**
+ * source.html
+ *
+ * Copyright 2013 Web Power, www.webpower.nl
+ * @author Arjan Haverkamp
+ */
+
+// Global vars:
+var tinymce,		// Reference to TinyMCE
+	editor,			// Reference to TinyMCE editor
+	codemirror,		// CodeMirror instance
+	chr = 0,			// Unused utf-8 character, placeholder for cursor
+	CMsettings;		// CodeMirror settings
+
+function mergeObjects(obj1, obj2) 
+{
+	"use strict";
+	for (var p in obj2) {
+		obj1[p] = obj2[p].constructor === Object ? mergeObjects(obj1[p], obj2[p]) : obj2[p];
+	}
+	return obj1;
+}
+
+(function()
+{// Initialise (before load)
+	"use strict";
+
+	tinymce = parent.tinymce;
+	editor = tinymce.activeEditor;
+	CMsettings = {
+		path: 'CodeMirror',
+		indentOnInit: false,
+		config: {// Default config
+			mode: 'application/x-httpd-php',
+			lineNumbers: true,
+			lineWrapping: true,
+			indentUnit: 1,
+			tabSize: 1,
+			matchBrackets: true,
+			styleActiveLine: true
+		}
+	};
+
+	// Overwrite default config with user config:
+	if (editor.settings.codemirror) {
+		for (var c in editor.settings.codemirror) {
+			CMsettings[c] = typeof editor.settings.codemirror[c] === 'object' ?
+								 mergeObjects(CMsettings[c], editor.settings.codemirror[c]) :
+								 editor.settings.codemirror[c];
+		}
+	}
+
+	// Add trailing slash to path:
+	if (!/\/$/.test(CMsettings.path)) {
+		CMsettings.path += '/';
+	}
+
+	var i, 
+		CMsrcs = [// JS source files needed for CodeMirror
+			'lib/codemirror.js',
+		 	'addon/edit/matchbrackets.js',
+		 	'mode/htmlmixed/htmlmixed.js',
+			'mode/xml/xml.js',
+			'mode/javascript/javascript.js',
+			'mode/css/css.js',
+			'mode/clike/clike.js',
+			'mode/php/php.js',
+			'addon/dialog/dialog.js',
+			'addon/search/searchcursor.js',
+			'addon/search/search.js',
+			'addon/selection/active-line.js'
+		],
+		CMcsss = [// Stylesheets needed for CodeMirror
+			'lib/codemirror.css',
+			'addon/dialog/dialog.css'
+		];
+
+	// Write JS source files
+	for (i = 0; i < CMsrcs.length; i++) {
+		document.write('<scr'+'ipt type="text/javascript" src="' + CMsettings.path + CMsrcs[i] + '"></scr'+'ipt>');
+	}
+
+	// Write stylesheets
+	for (i = 0; i < CMcsss.length; i++) {
+		document.write('<li'+'nk rel="stylesheet" type="text/css" href="' + CMsettings.path + CMcsss[i] + '" />');
+	}
+
+	window.onload = start;
+}());
+
+function start()
+{// Initialise (on load)
+	"use strict";
+
+	if (typeof(window.CodeMirror) !== 'function') {
+		alert('CodeMirror not found in "' + CMsettings.path + '", aborting...');
+		return;
+	}
+
+	// Create legend for keyboard shortcuts for find & replace:
+	var head = parent.document.querySelectorAll('.mce-foot')[0],
+		div = parent.document.createElement('div'),
+		td1 = '<td style="font-size:11px;background:#777;color:#fff;padding:0 4px">',
+		td2 = '<td style="font-size:11px;padding-right:5px">';
+	div.innerHTML = '<table cellspacing="0" cellpadding="0" style="border-spacing:4px"><tr>' + td1 + 'Ctrl-F</td>' + td2 + tinymce.translate('Start search') + '</td>' + td1 + 'Ctrl-G</td>' + td2 + tinymce.translate('Find next') + '</td>' + td1 + 'Shift-Ctrl-G</td>' + td2 + tinymce.translate('Find previous') + '</td></tr>' + '<tr>' + td1 + 'Shift-Ctrl-F</td>' + td2 + tinymce.translate('Replace') + '</td>' + td1 + 'Shift-Ctrl-R</td>' + td2 + tinymce.translate('Replace all') + '</td></tr></table>';
+	div.style.position = 'absolute';
+	div.style.left = '5px';
+	div.style.bottom = '5px';
+	head.appendChild(div);
+
+	// Set CodeMirror cursor to same position as cursor was in TinyMCE:
+	var html = editor.getContent({source_view: true});
+	html = html.replace(/<span\s+class="CmCaReT"([^>]*)>([^<]*)<\/span>/gm, String.fromCharCode(chr));
+	editor.dom.remove(editor.dom.select('.CmCaReT'));
+
+	CodeMirror.defineInitHook(function(inst) 
+	{
+		// Move cursor to correct position:
+		inst.focus();
+		var cursor = inst.getSearchCursor(String.fromCharCode(chr), false);
+		if (cursor.findNext()) {
+			inst.setCursor(cursor.to());
+			cursor.replace('');
+		}
+		
+		// Indent all code, if so requested:
+		if (editor.settings.codemirror.indentOnInit) {
+			var last = inst.lineCount();
+			inst.operation(function() {
+				for (var i = 0; i < last; ++i) {
+					inst.indentLine(i);
+				}
+			});
+		}
+	});
+
+	CMsettings.config.value = html;
+
+	// Instantiante CodeMirror:
+	codemirror = CodeMirror(document.body, CMsettings.config);
+}
+
+// This function is called by plugin.js, when user clicks 'Ok' button
+function submit()
+{
+	"use strict";
+
+	editor.setContent(codemirror.getValue());
+}
+
+</script>
+<style type="text/css">
+
+body {
+	margin: 0;
+}
+
+.CodeMirror {
+	height: 100%;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+.CodeMirror-activeline-background {
+	background: #e8f2ff !important;
+}
+
+</style>
+</head>
+<body></body>
+</html>

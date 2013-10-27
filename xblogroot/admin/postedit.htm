@@ -1,0 +1,61 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+<head>
+    <title>新建文章</title>
+    <script language="javascript" type="text/javascript" src="/admin/tinymce/tinymce.min.js"></script>
+    <script language="javascript" type="text/javascript">
+                    tinymce.init({
+                        selector: "textarea.editme",
+                        theme: "modern",
+                        plugins: [
+                            "advlist autolink lists link image charmap print preview anchor",
+                            "searchreplace visualblocks code fullscreen",
+                            "insertdatetime media table contextmenu paste"
+                        ],
+                        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                        autosave_ask_before_unload: false,
+                        max_height: 200,
+                        min_height: 160,
+                        height : 500
+                    });
+    </script>
+    
+    <script language="javascript" type="text/javascript">
+                    tinymce.init({
+                        selector: "textarea.editme2",
+                        theme: "modern",
+                        plugins: [
+                            "advlist autolink lists link image charmap print preview anchor",
+                            "searchreplace visualblocks code fullscreen",
+                            "insertdatetime media table contextmenu paste"
+                        ],
+                        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                        autosave_ask_before_unload: false,
+                        max_height: 200,
+                        min_height: 160,
+                        height : 180
+                    });
+    </script>
+
+</head>
+<body>
+<br>
+<div Style="width:80%;margin-left:25px; ">
+<form method="post" action="/postmanager?action=update_post">
+文章<input name="id" type ="hidden" value="<#POST_ID#>">(<#POST_ID#>)</input>
+标题: <input type="text" name="title" size="100"  value="<#POST_TITLE#>" />
+分类:
+<#POST_CLASSIFY#>
+<textarea class="editme" name="content" rows="300"><#POST_CONTENT#></textarea>
+<br>编辑文章摘要
+<br>
+<textarea class="editme2" id="htmlbox_icon_set_blue" name="brief"><#POST_BRIEF#></textarea>
+<input type="submit" name="blog" class="wymupdate" />
+
+</form>
+</div>
+
+</body>
+</html>
