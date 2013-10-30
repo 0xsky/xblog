@@ -276,7 +276,7 @@ function GetAdminUser(){
         success: function(json, textStatus, jqXHR) {
             $("#adminuser").html("");
             var n = json.result.xdata.length;
-            var strhtml = "<table><tr><td>id</td><td>登陆名</td><td>显示昵称</td><td>邮箱地址</td><td>操作</td></tr>";
+            var strhtml = "<table><tr><td>id</td><td>登陆名</td><td>密码</td><td>显示昵称</td><td>邮箱地址</td><td>操作</td></tr>";
             
             $.each(json.result.xdata ,function(i){
                 var js = json.result.xdata[i];
