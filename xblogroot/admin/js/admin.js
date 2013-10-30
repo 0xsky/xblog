@@ -283,8 +283,9 @@ function GetAdminUser(){
                 strhtml += "<tr><td class='id'>"+js[0]+"</td>";
                 
                 strhtml += "<td><input class='userlogin' size='40' type='text'  value='"+js[1]+"' /></td>";
-                strhtml += "<td><input class='nickname' size='40' type='text'  value='"+js[2]+"' /></td>";
-                strhtml += "<td><input class='email' size='40' type='text'  value='"+js[3]+"' /></td>";
+                strhtml += "<td><input class='userpass' size='40' type='text'  value='"+js[2]+"' /></td>";
+                strhtml += "<td><input class='nickname' size='40' type='text'  value='"+js[3]+"' /></td>";
+                strhtml += "<td><input class='email' size='40' type='text'  value='"+js[4]+"' /></td>";
                 strhtml += "<td><input type='submit' value='更新' id='BTadminuser'></td>";
              
             });
