@@ -13,7 +13,7 @@ xblog
 <p>xBlog交流QQ群:  202115979
 <p><p>作者: xSky        
 <p>博客: <a href="http://www.0xsky.com/">xSky's Blog</a>
-<p>捐赠作者:[支付宝]:guozhw@gmail.com
+<p>捐赠作者:[支付宝账号] guozhw@gmail.com
 <hr>
 
 ###安装 xBlog
