@@ -11,7 +11,7 @@ xblog
 <p>
 <p>demo: <a href="http://xblog.0xsky.com/"  target="_blank" >xBlog Demo</a>   
 <a href="http://xblog.0xsky.com/admin"  target="_blank">测试后台</a>
-<p>xBlog爱好者QQ群:  202115979
+<p>xBlog交流QQ群:  202115979
 <p><p>作者: xSky        
 <p>博客: <a href="http://www.0xsky.com/">xSky's Blog</a>
 <hr>
