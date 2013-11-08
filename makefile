@@ -7,6 +7,8 @@ INC_DIR     := /usr/include/mysql
 INC_DIR     += ./include 
 INC_DIR     += ./common
 
+MAKECOLOR="\033[32;1m"
+ENDCOLOR="\033[0m"
 
 INSTALL_PATH := .
 
@@ -29,7 +31,8 @@ all: $(APP_TARGET);
 
 $(APP_TARGET): $(OBJ_FILES)
 	$(CC) -o $(APP_TARGET) $(CFLAGS) $(OBJ_FILES) $(LDFLAGS)
-	@echo *********Build $(APP_TARGET:.a=.so) Successful*********
+	@echo $(MAKECOLOR)*********Build $(APP_TARGET:.a=.so) Successful*********$(ENDCOLOR)
+
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
