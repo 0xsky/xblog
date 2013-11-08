@@ -208,7 +208,7 @@ bool MysqlPool::SetCharacterset(MYSQL *pMySql, const char *character)
         return false;
     }
 
-    log_debug("SetCharacterset %s\n", character);
+    log_info("SetCharacterset %s\n", character);
     return true;
 }
 
@@ -221,16 +221,16 @@ bool MysqlPool::SelectJson(const char *sqlstring, string & result)
     MYSQL *pMySql = GetConnection();
     if (pMySql == NULL)
     {
-        root["errno"] = "system error";
+        root["errno"] = mysql_errno(pMySql);
         root["error"] = mysql_error(pMySql);
         root["affected"] = mysql_affected_rows(pMySql);
         return false;
     }
     
-    log_debug("%s \r\n", sqlstring);
+    log_debug("MysqlPool::SelectJson %s \r\n", sqlstring);
     if (mysql_real_query(pMySql, sqlstring, strlen(sqlstring)))
     {
-        log_error("CMySQLPool::Execute %s\n", mysql_error(pMySql));
+        log_error("MysqlPool::SelectJson %s\n", mysql_error(pMySql));
         goto end;
     }
     else
@@ -244,7 +244,7 @@ bool MysqlPool::SelectJson(const char *sqlstring, string & result)
             int num_fields = mysql_num_fields(pRes);
             map < int,string > fieldsMap;
 
-            log_debug("fields=%d result: %d \r\n", num_fields, n);
+            log_debug("MysqlPool::SelectJson fields=%d result: %d \r\n", num_fields, n);
             root["num"] = n;
             for (int i = 0; i < num_fields; i++)
             {
@@ -253,7 +253,7 @@ bool MysqlPool::SelectJson(const char *sqlstring, string & result)
                 log_debug("%s\t", field->name);
                 fieldlist.append(field->name);
             }
-            log_debug("\r\n");
+            log_debug("MysqlPool::SelectJson \r\n");
 
             MYSQL_ROW row = mysql_fetch_row(pRes);
 
@@ -288,7 +288,7 @@ bool MysqlPool::SelectJson(const char *sqlstring, string & result)
         }
         else
         {
-            log_debug("MYSQL_RES %s \r\n", mysql_error(pMySql));
+            log_debug("MysqlPool::SelectJson MYSQL_RES %s \r\n", mysql_error(pMySql));
         }
     }
 
@@ -296,7 +296,7 @@ bool MysqlPool::SelectJson(const char *sqlstring, string & result)
     root["errno"] = mysql_errno(pMySql);
     root["error"] = mysql_error(pMySql);
     root["affected"] = mysql_affected_rows(pMySql);
-    log_debug("affected=%lld \r\n", mysql_affected_rows(pMySql));
+    log_debug("MysqlPool::SelectJson affected=%lld \r\n", mysql_affected_rows(pMySql));
     Json::FastWriter writer;
     result += writer.write(root);
     FreeConnection(pMySql);

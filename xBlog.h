@@ -29,7 +29,7 @@ public:
     static const char *DebugHttpGetCommand(struct evhttp_request *req);
     static void HttpParseURL(struct evhttp_request *req, struct evkeyvalq *evMyheader);
     static void GetHttpPostData(struct evhttp_request *req, struct evkeyvalq *evdata);
-    static void SendHttpResphone(struct evhttp_request *req, string & strData);
+    static void SendHttpResphone(struct evhttp_request *req, const string & strData);
 
     bool StartHttpd();
     void SetRouteTable(evhttp * http);

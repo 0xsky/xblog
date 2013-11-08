@@ -22,19 +22,8 @@ Config *Config::GetInstance()
     return mConfig;
 }
 
-Config::Config()
-{
-    pMysqlcfg = new MYSQLCONFIG;
-}
-
-Config::~Config()
-{
-    delete pMysqlcfg;
-}
-
 bool Config::Init(string IniFile)
 {
-    
     CIniFile iniFile(IniFile);
 	if (iniFile.ReadFile())
 	{
@@ -42,7 +31,7 @@ bool Config::Init(string IniFile)
 		LoadxBlogAppConfig(iniFile);
         
     char szTemp[SIZE_1024] = { 0 };
-    char szDir[SIZE_1024];
+    char szDir[SIZE_1024]  = { 0 };
     
 #ifdef WIN32
     GetCurrentDirectory(sizeof(szTemp), szTemp);
@@ -67,12 +56,12 @@ bool Config::Init(string IniFile)
 
 bool Config::LoadxBlogDBConfig(CIniFile &iniFile)
 {
-	pMysqlcfg->ipaddr   = iniFile.GetValue("MYSQLPOOL", "IPADDR");
-	pMysqlcfg->port     = iniFile.GetValueI("MYSQLPOOL", "PORT");
-	pMysqlcfg->username = iniFile.GetValue("MYSQLPOOL", "USER");
-	pMysqlcfg->passwd   = iniFile.GetValue("MYSQLPOOL", "PASSWD");
-	pMysqlcfg->dbname   = iniFile.GetValue("MYSQLPOOL", "DBNAME");
-	pMysqlcfg->poolsize = iniFile.GetValueI("MYSQLPOOL", "POOLSIZE");
+	xBlogMysqlcfg.ipaddr   = iniFile.GetValue("MYSQLPOOL", "IPADDR");
+	xBlogMysqlcfg.port     = iniFile.GetValueI("MYSQLPOOL", "PORT");
+	xBlogMysqlcfg.username = iniFile.GetValue("MYSQLPOOL", "USER");
+	xBlogMysqlcfg.passwd   = iniFile.GetValue("MYSQLPOOL", "PASSWD");
+	xBlogMysqlcfg.dbname   = iniFile.GetValue("MYSQLPOOL", "DBNAME");
+	xBlogMysqlcfg.poolsize = iniFile.GetValueI("MYSQLPOOL", "POOLSIZE");
 
 	return true;
 }

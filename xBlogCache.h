@@ -46,9 +46,12 @@ class xBlogCache
 
     string &GetPage(const uint32 pageid);
     void SetPage(const uint32 pageid, const string & data);
+    void delPage(const uint32 pageid);
+    
     string &GetPost(const uint32 postid);
     void SetPost(const uint32 postid, const string & data);
-
+    void delPost(const uint32 pageid);
+    
     void OnTimer();
 
   private:

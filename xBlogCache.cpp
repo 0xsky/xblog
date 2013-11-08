@@ -34,6 +34,20 @@ void xBlogCache::SetPage(const uint32 pageid, const string & data)
     mPageCacheDataMap[pageid].strData = data;
 }
 
+void xBlogCache::delPage(const uint32 pageid)
+{
+    XLOCK(mPageCacheLock);
+    if (mPageCacheDataMap.size()>0)
+    {
+        log_debug("xBlogCache::delPage cache get =%d \r\n", mPageCacheDataMap.size());
+        CACHEDATAMAPITER iter = mPageCacheDataMap.find(pageid);
+        if(iter!=mPageCacheDataMap.end())
+        {
+            mPageCacheDataMap.erase(iter);
+        }
+    }
+}
+
 string &xBlogCache::GetPost(const uint32 postid)
 {
     XLOCK(mPostCacheLock);
@@ -44,6 +58,20 @@ void xBlogCache::SetPost(const uint32 postid, const string & data)
 {
     XLOCK(mPostCacheLock);
     mPostCacheDataMap[postid].strData = data;
+}
+
+void xBlogCache::delPost(const uint32 postid)
+{
+    XLOCK(mPostCacheLock);
+    if (mPostCacheDataMap.size()>0)
+    {
+        log_debug("xBlogCache::delPage cache get =%d \r\n", mPostCacheDataMap.size());
+        CACHEDATAMAPITER iter = mPostCacheDataMap.find(postid);
+        if(iter!=mPostCacheDataMap.end())
+        {
+            mPostCacheDataMap.erase(iter);
+        }
+    }
 }
 
 void xBlogCache::OnTimer()

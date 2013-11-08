@@ -123,8 +123,7 @@ void xBlog::GetHttpPostData(struct evhttp_request *req, struct evkeyvalq *evdata
     free(pbuffer);
 }
 
-
-void xBlog::SendHttpResphone(struct evhttp_request *req, string & strData)
+void xBlog::SendHttpResphone(struct evhttp_request *req, const string & strData)
 {
     struct evbuffer *buf = evbuffer_new();
 
@@ -134,7 +133,7 @@ void xBlog::SendHttpResphone(struct evhttp_request *req, string & strData)
         return;
     }
 
-    evbuffer_add_printf(buf, "%s\n", strData.c_str());
+    evbuffer_add_printf(buf, "%s", strData.c_str());
 
     evhttp_add_header(evhttp_request_get_output_headers(req),
                       "Content-Type", "text/html; charset=utf-8");
@@ -217,14 +216,12 @@ bool xBlog::Run(const char *ip, uint16 port, uint32 timeout_secs, uint32 nthread
     for (uint32 i = 0; i < nthreads; i++)
     {
         struct event_base *base = event_base_new();
-
         if (base == NULL)
         {
             return false;
         }
 
         struct evhttp *httpd = evhttp_new(base);
-
         if (httpd == NULL)
         {
             return false;
@@ -236,7 +233,7 @@ bool xBlog::Run(const char *ip, uint16 port, uint32 timeout_secs, uint32 nthread
             return false;
         }
 
-        SetRoute(httpd);
+        SetRouteTable(httpd);
 
         ths[i] = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE) xBlog::Dispatch, base, NULL, NULL);
         log_info("%d %d \r\n", i, ths[i]);
@@ -334,11 +331,11 @@ void xBlog::SetRouteTable(evhttp * http)
 void xBlog::StartMysqlPool()
 {
     xBlogData::GetInstance()->pMysqlPool = MysqlPool::GetInstance();
-    xBlogData::GetInstance()->pMysqlPool->Init(Config::GetInstance()->pMysqlcfg->ipaddr.c_str(),
-                                               Config::GetInstance()->pMysqlcfg->username.c_str(),
-                                               Config::GetInstance()->pMysqlcfg->passwd.c_str(),
-                                               Config::GetInstance()->pMysqlcfg->dbname.c_str());
-    xBlogData::GetInstance()->pMysqlPool->ConnectDB(Config::GetInstance()->pMysqlcfg->poolsize);
+    xBlogData::GetInstance()->pMysqlPool->Init(Config::GetInstance()->xBlogMysqlcfg.ipaddr.c_str(),
+                                               Config::GetInstance()->xBlogMysqlcfg.username.c_str(),
+                                               Config::GetInstance()->xBlogMysqlcfg.passwd.c_str(),
+                                               Config::GetInstance()->xBlogMysqlcfg.dbname.c_str());
+    xBlogData::GetInstance()->pMysqlPool->ConnectDB(Config::GetInstance()->xBlogMysqlcfg.poolsize);
     
     bool bRet = Config::GetInstance()->LoadxBlogSiteConfig();
     if (!bRet)
@@ -349,55 +346,3 @@ void xBlog::StartMysqlPool()
 }
 
 
-int main(int argc, char **argv)
-{
-
-    Config::GetInstance()->Init("xblog.ini");
-
-#ifdef _WIN32
-
-#else
-    LOGGER.setFileName(Config::GetInstance()->xBlogAppConfig.LogFileName.c_str());
-    LOGGER.setLogLevel(Config::GetInstance()->xBlogAppConfig.LogLevel.c_str());
-    LOGGER.setMaxFileSize(1 << 23);
-#endif
-
-    log_info("Httpd version: %s %d \n", event_get_version(), event_get_version_number());
-    log_info("Listen on: %s %u\n", Config::GetInstance()->xBlogAppConfig.ServerIp.c_str(), 
-                                   Config::GetInstance()->xBlogAppConfig.Port);
-                                   
-    log_info("MYSQL: %s:%u %s/%s dbname:%s poolsize:%d \n", 
-                Config::GetInstance()->pMysqlcfg->ipaddr.c_str(),
-                Config::GetInstance()->pMysqlcfg->port,
-                Config::GetInstance()->pMysqlcfg->username.c_str(),
-                Config::GetInstance()->pMysqlcfg->passwd.c_str(),
-                Config::GetInstance()->pMysqlcfg->dbname.c_str(),
-                Config::GetInstance()->pMysqlcfg->poolsize );
-                
-    log_info("Shell:%s\n",         Config::GetInstance()->xBlogAppConfig.Shell.c_str());
-    log_info("RootDir:%s\n",       Config::GetInstance()->xBlogAppConfig.RootDir.c_str());
-    log_info("LogFileName:%s\n",   Config::GetInstance()->xBlogAppConfig.LogFileName.c_str());
-    log_info("LogLevel:%s\n",      Config::GetInstance()->xBlogAppConfig.LogLevel.c_str());
-    log_info("Httpdthreads:%d \n", Config::GetInstance()->xBlogAppConfig.Httpdthreads);
-    log_info("HttpdTimeOut:%d \n", Config::GetInstance()->xBlogAppConfig.HttpdTimeOut);
-    log_info("CacheTimer:%d \n",   Config::GetInstance()->xBlogAppConfig.CacheTimer);
-
-    xBlog xblog;
-
-    xblog.StartMysqlPool();
-    xblog.Init();
-
-    xblog.Run(Config::GetInstance()->xBlogAppConfig.ServerIp.c_str(),
-              Config::GetInstance()->xBlogAppConfig.Port,
-              Config::GetInstance()->xBlogAppConfig.HttpdTimeOut, 
-              Config::GetInstance()->xBlogAppConfig.Httpdthreads);
-
-    while (true)
-    {
-        xblog.OnTimer();
-        SLEEP(1);
-        xBlogData::GetInstance()->pMysqlPool->Keepalive();
-    }
-
-    return 0;
-}

@@ -43,8 +43,8 @@ typedef map < string, string >    BLOGSITECONFIG;
 class Config
 {
 public:
-    Config();
-    virtual ~Config();
+    Config(){}
+    virtual ~Config(){}
 
     static Config *GetInstance();
     static Config *mConfig;
@@ -55,7 +55,7 @@ public:
 	bool LoadxBlogSiteConfig();
 
 public:
-    MYSQLCONFIG *  pMysqlcfg;
+    MYSQLCONFIG    xBlogMysqlcfg;
 	BLOGAPPCONFIG  xBlogAppConfig;
 	BLOGSITECONFIG xBlogSiteConfigMap;
     string strRootFullPath;

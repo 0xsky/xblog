@@ -34,7 +34,7 @@ void xBlogPage::SendFile(struct evhttp_request *req, const char *rootdir, const 
     const char *type;
     char szPath[SIZE_1024] = { 0 };
 
-    snprintf(szPath, sizeof(szPath), "%s%s", rootdir, filepath);
+    evutil_snprintf(szPath, sizeof(szPath), "%s%s", rootdir, filepath);
 
     log_info("xBlogPage::SendFile a GET request for <%s>\n", uri);
 
@@ -145,11 +145,11 @@ void xBlogPage::AdminStatusCallback(struct evhttp_request *req, void *arg)
 
 
     Json::Value jMysqlConfig;
-    jMysqlConfig["ipaddr"]   = Config::GetInstance()->pMysqlcfg->ipaddr;
-    jMysqlConfig["port"]     = Config::GetInstance()->pMysqlcfg->port;
-    jMysqlConfig["dbname"]   = Config::GetInstance()->pMysqlcfg->dbname;
-    jMysqlConfig["username"] = Config::GetInstance()->pMysqlcfg->username;
-    jMysqlConfig["poolsize"] = Config::GetInstance()->pMysqlcfg->poolsize;
+    jMysqlConfig["ipaddr"]   = Config::GetInstance()->xBlogMysqlcfg.ipaddr;
+    jMysqlConfig["port"]     = Config::GetInstance()->xBlogMysqlcfg.port;
+    jMysqlConfig["dbname"]   = Config::GetInstance()->xBlogMysqlcfg.dbname;
+    jMysqlConfig["username"] = Config::GetInstance()->xBlogMysqlcfg.username;
+    jMysqlConfig["poolsize"] = Config::GetInstance()->xBlogMysqlcfg.poolsize;
 
     root["Mysql"] = jMysqlConfig;
 
@@ -189,11 +189,11 @@ void xBlogPage::AdminSystemCallback(struct evhttp_request *req, void *arg)
     root["HttpdTimeOut"] = Config::GetInstance()->xBlogAppConfig.HttpdTimeOut;
 
     Json::Value MysqlConfig;
-    MysqlConfig["ipaddr"]   = Config::GetInstance()->pMysqlcfg->ipaddr;
-    MysqlConfig["port"]     = Config::GetInstance()->pMysqlcfg->port;
-    MysqlConfig["dbname"]   = Config::GetInstance()->pMysqlcfg->dbname;
-    MysqlConfig["username"] = Config::GetInstance()->pMysqlcfg->username;
-    MysqlConfig["poolsize"] = Config::GetInstance()->pMysqlcfg->poolsize;
+    MysqlConfig["ipaddr"]   = Config::GetInstance()->xBlogMysqlcfg.ipaddr;
+    MysqlConfig["port"]     = Config::GetInstance()->xBlogMysqlcfg.port;
+    MysqlConfig["dbname"]   = Config::GetInstance()->xBlogMysqlcfg.dbname;
+    MysqlConfig["username"] = Config::GetInstance()->xBlogMysqlcfg.username;
+    MysqlConfig["poolsize"] = Config::GetInstance()->xBlogMysqlcfg.poolsize;
 
     root["Mysql"] = MysqlConfig;
 
@@ -222,21 +222,21 @@ void xBlogPage::AdminUserCallback(struct evhttp_request *req, void *arg)
     }
 
     xBlog::HttpParseURL(req, &evURLdata);
-    const char *szAction = evhttp_find_header(&evURLdata, "action");    /* 操作类型 */
-    if(NULL==szAction)
+    const char *pAction = evhttp_find_header(&evURLdata, "action");    /* 操作类型 */
+    if(NULL==pAction)
     {
         return;
     }
 
     string strHtml;
     bool bRet = false;
-    if (0 == stricmp(szAction, "view"))
+    if (0 == stricmp(pAction, "view"))
     {
         xBlogData::GetInstance()->AdminUser_View(strHtml);
         xBlog::SendHttpResphone(req, strHtml);
         return;
     }
-    else if (0 == stricmp(szAction, "update"))
+    else if (0 == stricmp(pAction, "update"))
     {
         struct evkeyvalq evPostData;
         xBlog::GetHttpPostData(req, &evPostData);
@@ -252,7 +252,7 @@ void xBlogPage::AdminUserCallback(struct evhttp_request *req, void *arg)
     {
     }
 
-    strHtml += szAction;
+    strHtml += pAction;
     strHtml += " operation ";
     strHtml += bRet?"success":"Failed";
     xBlog::SendHttpResphone(req, strHtml);
@@ -368,9 +368,9 @@ void xBlogPage::RequestPage(struct evhttp_request *req, const char *PageId)
     StringReplace(strHtml.value, "<#template:article_multi#>", strData);
 
     char tmp[SIZE_32] = { 0 };
-    sprintf(tmp, "%d", atoul(PageId) >= 0 ? (atoul(PageId) + 1) : 0);
+    evutil_snprintf(tmp, sizeof(tmp),"%d", atoul(PageId) >= 0 ? (atoul(PageId) + 1) : 0);
     StringReplace(strHtml.value, "<#template:pagebar_next#>", tmp);
-    sprintf(tmp, "%d", atoul(PageId) > 1 ? (atoul(PageId) - 1) : 0);
+    evutil_snprintf(tmp, sizeof(tmp), "%d", atoul(PageId) > 1 ? (atoul(PageId) - 1) : 0);
     StringReplace(strHtml.value, "<#template:pagebar_previous#>", tmp);
 
     xBlogCache::GetInstance()->SetPage(atoul(PageId), strHtml.value);
@@ -409,9 +409,9 @@ void xBlogPage::CatalogRequestCallback(struct evhttp_request *req, void *arg)
     StringReplace(strHtml.value, "<#template:article_multi#>", strData);
 
     char tmp[SIZE_32] = { 0 };
-    sprintf(tmp, "%d", nPageId >= 0 ? (nPageId + 1) : 0);
+    evutil_snprintf(tmp, sizeof(tmp), "%d", nPageId >= 0 ? (nPageId + 1) : 0);
     StringReplace(strHtml.value, "<#template:pagebar_next#>", tmp);
-    sprintf(tmp, "%d", nPageId > 1 ? (nPageId - 1) : 0);
+    evutil_snprintf(tmp, sizeof(tmp), "%d", nPageId > 1 ? (nPageId - 1) : 0);
     StringReplace(strHtml.value, "<#template:pagebar_previous#>", tmp);
     StringReplace(strHtml.value, "<#article/category/id#>", pCateId);
 
@@ -490,8 +490,8 @@ void xBlogPage::GuestPostCallback(struct evhttp_request *req, void *arg)
     struct evkeyvalq evURLdata;
 
     xBlog::HttpParseURL(req, &evURLdata);
-    const char *szAction = evhttp_find_header(&evURLdata, "action");
-    if (NULL==szAction)
+    const char *pAction = evhttp_find_header(&evURLdata, "action");
+    if (NULL==pAction)
     {
         SendErrorPage(req, (xBlog *)arg, 404);
         return;
@@ -499,7 +499,7 @@ void xBlogPage::GuestPostCallback(struct evhttp_request *req, void *arg)
     
     xBlog::GetHttpPostData(req, &evPostData);
     const char *pIP = evhttp_find_header(evhttp_request_get_input_headers(req), "host");
-    if (0 == stricmp(szAction, "comment"))
+    if (0 == stricmp(pAction, "comment"))
     {
         const char *pInpAjax = evhttp_find_header(&evPostData, "inpAjax");
         const char *pInpID = evhttp_find_header(&evPostData, "inpID");
@@ -517,7 +517,7 @@ void xBlogPage::GuestPostCallback(struct evhttp_request *req, void *arg)
     }
     string strHtml;
 
-    strHtml += szAction;
+    strHtml += pAction;
     strHtml += " operation success!";
     xBlog::SendHttpResphone(req, strHtml);
 }
@@ -532,18 +532,18 @@ void xBlogPage::AdminCheckLoginCallback(struct evhttp_request *req, void *arg)
 
     xBlog::GetHttpPostData(req, &post_data);
 
-    const char *szUserName = evhttp_find_header(&post_data, "UserName");
-    const char *szPasswd = evhttp_find_header(&post_data, "password");
+    const char *pUserName = evhttp_find_header(&post_data, "UserName");
+    const char *pPasswd = evhttp_find_header(&post_data, "password");
 
-    log_info("xBlogPage::AdminCheckLoginCallback username:%s  passwd:%s \r\n", szUserName, szPasswd);
+    log_info("xBlogPage::AdminCheckLoginCallback username:%s  passwd:%s \r\n", pUserName, pPasswd);
 
-    if ((NULL==szUserName) || (NULL==szPasswd))
+    if ((NULL==pUserName) || (NULL==pPasswd))
     {
         SendLoginPage(req, pBlog);
         return;
     }
 
-    if (0 != strcmp(szPasswd, Config::GetInstance()->xBlogSiteConfigMap["XBLOG_ADMIN_PASS"].c_str()))
+    if (0 != strcmp(pPasswd, Config::GetInstance()->xBlogSiteConfigMap["XBLOG_ADMIN_PASS"].c_str()))
     {
         SendLoginPage(req, pBlog);
         return;
@@ -588,27 +588,29 @@ void xBlogPage::AdminPostManagerCallback(struct evhttp_request *req, void *arg)
     xBlog::GetHttpPostData(req, &evPostData);
     
     string strHtml;
-    const char *szAction = evhttp_find_header(&evURLdata, "action");
+    const char *pAction = evhttp_find_header(&evURLdata, "action");
 
-    if(NULL==szAction)
+    if(NULL==pAction)
     {
         SendErrorPage(req, (xBlog *)arg, 404);
         return;
     }
     
-    if (0 == stricmp(szAction, "delete"))
+    if (0 == stricmp(pAction, "delete"))
     {
         const char *szPostId = evhttp_find_header(&evPostData, "id");
         strHtml += szPostId;
         xBlogData::GetInstance()->AdminPostManager_UpdatePostStatus(szPostId, "delete");
+        xBlogCache::GetInstance()->delPost(atoul(szPostId));
     }
-    else if (0 == stricmp(szAction, "revert"))
+    else if (0 == stricmp(pAction, "revert"))
     {
         const char *szPostId = evhttp_find_header(&evPostData, "id");
         strHtml += szPostId;
         xBlogData::GetInstance()->AdminPostManager_UpdatePostStatus(szPostId, "publish");
+        xBlogCache::GetInstance()->delPost(atoul(szPostId));
     }
-    else if (0 == stricmp(szAction, "new_post"))
+    else if (0 == stricmp(pAction, "new_post"))
     {
         const char *pTitle = evhttp_find_header(&evPostData, "title");
         const char *pClassify = evhttp_find_header(&evPostData, "classify");
@@ -636,7 +638,7 @@ void xBlogPage::AdminPostManagerCallback(struct evhttp_request *req, void *arg)
         free(strContent);
         free(strBrief);
     }
-    else if (0 == stricmp(szAction, "update_post"))
+    else if (0 == stricmp(pAction, "update_post"))
     {
         const char *pID = evhttp_find_header(&evPostData, "id");
         const char *pTitle = evhttp_find_header(&evPostData, "title");
@@ -663,9 +665,11 @@ void xBlogPage::AdminPostManagerCallback(struct evhttp_request *req, void *arg)
         free(strClassify);
         free(strContent);
         free(strBrief);
+        
+        xBlogCache::GetInstance()->delPost(atoul(pID));
     }
 
-    strHtml += szAction;
+    strHtml += pAction;
     strHtml += " operation success!";
     xBlog::SendHttpResphone(req, strHtml);
 }
@@ -690,20 +694,20 @@ void xBlogPage::AdminSiteConfigCallback(struct evhttp_request *req, void *arg)
 
     xBlog::HttpParseURL(req, &evURLdata);
     xBlog::GetHttpPostData(req, &evPostData);
-    const char *szAction = evhttp_find_header(&evURLdata, "action");
-    if(NULL==szAction)
+    const char *pAction = evhttp_find_header(&evURLdata, "action");
+    if(NULL==pAction)
     {
         SendErrorPage(req, (xBlog *)arg, 404);
         return;
     }
     string strHtml;
-    if (0 == stricmp(szAction, "mainpage"))
+    if (0 == stricmp(pAction, "mainpage"))
     {
         xBlogData::GetInstance()->AdminGetSiteConfig_View(strHtml);
         xBlog::SendHttpResphone(req, strHtml);
         return;
     }
-    else if (0 == stricmp(szAction, "update"))
+    else if (0 == stricmp(pAction, "update"))
     {
         const char *szId = evhttp_find_header(&evPostData, "id");
         const char *szValue = evhttp_find_header(&evPostData, "value");
@@ -714,10 +718,9 @@ void xBlogPage::AdminSiteConfigCallback(struct evhttp_request *req, void *arg)
     {
 
     }
-    strHtml += szAction;
+    strHtml += pAction;
     strHtml += " operation success!";
     xBlog::SendHttpResphone(req, strHtml);
-
 }
 
 void xBlogPage::AdminLinksCallback(struct evhttp_request *req, void *arg)
@@ -740,33 +743,33 @@ void xBlogPage::AdminLinksCallback(struct evhttp_request *req, void *arg)
 
     xBlog::HttpParseURL(req, &evURLdata);
     xBlog::GetHttpPostData(req, &evPostData);
-    const char *szAction = evhttp_find_header(&evURLdata, "action");    /* 操作类型 */
-    if(NULL==szAction)
+    const char *pAction = evhttp_find_header(&evURLdata, "action");    /* 操作类型 */
+    if(NULL==pAction)
     {
         SendErrorPage(req, (xBlog *)arg, 404);
         return;
     }
     
     string strHtml;
-    if (0 == stricmp(szAction, "view"))
+    if (0 == stricmp(pAction, "view"))
     {
         xBlogData::GetInstance()->AdminLinks_View(strHtml);
         xBlog::SendHttpResphone(req, strHtml);
         return;
     }
-    else if (0 == stricmp(szAction, "update"))
+    else if (0 == stricmp(pAction, "update"))
     {
-        const char *szId = evhttp_find_header(&evPostData, "id");
-        const char *szUrl = evhttp_find_header(&evPostData, "url");
-        const char *szName = evhttp_find_header(&evPostData, "name");
+        const char *pId = evhttp_find_header(&evPostData, "id");
+        const char *pUrl = evhttp_find_header(&evPostData, "url");
+        const char *pName = evhttp_find_header(&evPostData, "name");
 
-        xBlogData::GetInstance()->AdminLinks_Update(szId, szUrl, szName);
+        xBlogData::GetInstance()->AdminLinks_Update(pId, pUrl, pName);
     }
     else
     {
     }
 
-    strHtml += szAction;
+    strHtml += pAction;
     strHtml += " operation success!";
     xBlog::SendHttpResphone(req, strHtml);
 }
@@ -791,26 +794,27 @@ void xBlogPage::AdminCatalogCallback(struct evhttp_request *req, void *arg)
 
     xBlog::HttpParseURL(req, &evURLdata);
     xBlog::GetHttpPostData(req, &evPostData);
-    const char *szAction = evhttp_find_header(&evURLdata, "action");    /* 操作类型 */
-    if(NULL==szAction)
+    const char *pAction = evhttp_find_header(&evURLdata, "action");    /* 操作类型 */
+    if(NULL==pAction)
     {
         SendErrorPage(req, (xBlog *)arg, 404);
         return;
     }
+    
     string strHtml;
-    if (0 == stricmp(szAction, "view"))
+    if (0 == stricmp(pAction, "view"))
     {
         xBlogData::GetInstance()->AdminCatalog_View(strHtml);
         xBlog::SendHttpResphone(req, strHtml);
         return;
     }
-    if (0 == stricmp(szAction, "viewselect"))
+    if (0 == stricmp(pAction, "viewselect"))
     {
         xBlogData::GetInstance()->AdminCatalog_GetSelect(strHtml);
         xBlog::SendHttpResphone(req, strHtml);
         return;
     }
-    else if (0 == stricmp(szAction, "update"))
+    else if (0 == stricmp(pAction, "update"))
     {
         const char *szId = evhttp_find_header(&evPostData, "id");
         const char *szClassfyId = evhttp_find_header(&evPostData, "classfyid");
@@ -819,7 +823,7 @@ void xBlogPage::AdminCatalogCallback(struct evhttp_request *req, void *arg)
 
         xBlogData::GetInstance()->AdminCatalog_Update(szId, szClassfyId, szName, szStatus);
     }
-    else if (0 == stricmp(szAction, "add"))
+    else if (0 == stricmp(pAction, "add"))
     {
         const char *szClassfyId = evhttp_find_header(&evPostData, "classfyid");
         const char *szName = evhttp_find_header(&evPostData, "classfyname");
@@ -831,7 +835,7 @@ void xBlogPage::AdminCatalogCallback(struct evhttp_request *req, void *arg)
     {
     }
 
-    strHtml += szAction;
+    strHtml += pAction;
     strHtml += " operation success!";
     xBlog::SendHttpResphone(req, strHtml);
 }
@@ -856,20 +860,20 @@ void xBlogPage::AdminCommentsCallback(struct evhttp_request *req, void *arg)
 
     xBlog::HttpParseURL(req, &evURLdata);
     xBlog::GetHttpPostData(req, &evPostData);
-    const char *szAction = evhttp_find_header(&evURLdata, "action");    /* 操作类型 */
-    if(NULL==szAction)
+    const char *pAction = evhttp_find_header(&evURLdata, "action");    /* 操作类型 */
+    if(NULL==pAction)
     {
         SendErrorPage(req, (xBlog *)arg, 404);
         return;
     }
     string strHtml;
-    if (0 == stricmp(szAction, "view"))
+    if (0 == stricmp(pAction, "view"))
     {
         xBlogData::GetInstance()->AdminComments_View(strHtml);
         xBlog::SendHttpResphone(req, strHtml);
         return;
     }
-    else if (0 == stricmp(szAction, "delete"))
+    else if (0 == stricmp(pAction, "delete"))
     {
         const char *szId = evhttp_find_header(&evPostData, "id");
         xBlogData::GetInstance()->AdminComments_Delete(szId);
@@ -878,7 +882,7 @@ void xBlogPage::AdminCommentsCallback(struct evhttp_request *req, void *arg)
     {
     }
 
-    strHtml += szAction;
+    strHtml += pAction;
     strHtml += " operation success!";
     xBlog::SendHttpResphone(req, strHtml);
 }
