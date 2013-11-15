@@ -42,7 +42,6 @@ class xBlogCache
     };
 
     static xBlogCache *GetInstance();
-    static xBlogCache *gData;
 
     string &GetPage(const uint32 pageid);
     void SetPage(const uint32 pageid, const string & data);

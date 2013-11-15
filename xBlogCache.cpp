@@ -11,14 +11,10 @@
 #include "xBlogBase.h"
 #include "xConfig.h"
 
-xBlogCache *xBlogCache::gData = NULL;
 xBlogCache *xBlogCache::GetInstance()
 {
-    if (NULL == gData)
-    {
-        gData = new xBlogCache;
-    }
-    return gData;
+    static xBlogCache gData;
+    return &gData;
 }
 
 string &xBlogCache::GetPage(const uint32 pageid)
