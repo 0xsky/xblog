@@ -28,7 +28,6 @@ class xBlogData
     };
 
     static xBlogData *GetInstance();
-    static xBlogData *gData;
 
     bool GetSiteConfig(BLOGSITECONFIG &configmap);
 
@@ -41,10 +40,10 @@ class xBlogData
     string GetArticle(string & strHtml, const uint32 id);
     string GetArticleCommentList(string & strHtml, const uint32 postid);
 
-    string GetCacheIncludeCatalog(string & strHtml);
-    string GetCacheIncludeLink(string & strHtml);
+    string GetCacheIncludeCatalog(const string & strHtml);
+    string GetCacheIncludeLink(const string & strHtml);
 
-    string GetCatalogPage(string & strHtml, const uint32 catalog, const uint32 page);
+    bool GetCatalogPage(string & strHtml, const uint32 catalog, const uint32 page);
 
     bool AdminGetSiteConfig_View(string & strData);
     bool AdminGetSiteConfig_Update(const char *szId, const char *szValue);

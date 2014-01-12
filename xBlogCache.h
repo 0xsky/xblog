@@ -52,6 +52,7 @@ class xBlogCache
     void delPost(const uint32 pageid);
     
     void OnTimer();
+    void CacheClear();
 
   private:
     CACHEDATAMAP mPageCacheDataMap;

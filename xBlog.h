@@ -25,6 +25,7 @@ public:
     bool Init();
     void StartMysqlPool();
 
+    static void HttpDebug(struct evhttp_request *req);
     static void DebugHttpHeader(struct evhttp_request *req);
     static const char *DebugHttpGetCommand(struct evhttp_request *req);
     static void HttpParseURL(struct evhttp_request *req, struct evkeyvalq *evMyheader);

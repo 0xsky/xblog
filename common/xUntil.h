@@ -32,6 +32,7 @@ using namespace  std;
         #define S_ISDIR(x) (((x) & S_IFMT) == S_IFDIR)
     #endif
     #define SLEEP(ms) Sleep(1000*ms)
+#define snprintf _snprintf
 #else
     #include <sys/stat.h>
     #include <sys/socket.h>

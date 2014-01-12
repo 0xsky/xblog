@@ -8,17 +8,15 @@
  
 #include <string>
 #include <map>
-
 #include "xBlogBase.h"
 #include "xConfig.h"
 #include "xBlogData.h"
 #include "xLog.h"
 #include "xConfig.h"
-
 using namespace std;
 
 class xBlogPageTemplate;
-typedef string(xBlogPageTemplate::*TEMPLATECB) (string & html);
+typedef string(xBlogPageTemplate::*TEMPLATECB) (const string & html);
 
 struct XTEMPLATE
 {
@@ -33,21 +31,20 @@ public:
 	~xBlogPageTemplate(){}
 
 	static xBlogPageTemplate *GetInstance();
-	static xBlogPageTemplate *gXBlogPageTemplate;
 
 public:
 	void Init();
 	bool BuildHtmlByTemplateKey(const char *pKey, XTEMPLATE & strHtml);
 
-	string GetPageTemplate(const char *pKey)
+	const string &GetPageTemplate(const char *pKey)
 	{
 		return PageTemplateMap[pKey].value;
 	}
-	string GetActiveTemplate(const char *pKey)
+	const string &GetActiveTemplate(const char *pKey)
 	{
 		return ActiveTemplateMap[pKey].value;
 	}
-	string GetPageCache(const char *pKey)
+	const string &GetPageCache(const char *pKey)
 	{
 		return PageCacheMap[pKey].value;
 	}
@@ -60,13 +57,12 @@ private:
 	void LoadCachePage();
 	void LoadCachePageData();
 
-    string GetCacheIncludeCatalog(string & strHtml);
-    string GetCacheIncludeLink(string & strHtml);
+    string GetCacheIncludeCatalog(const string & strHtml);
+    string GetCacheIncludeLink(const string & strHtml);
     
 	void ReplacePageTemplate(string & strHtml);
 	void ReplaceSiteConfig(string & strHtml);
 	void ReplacePageCache(string & strHtml);
-	
 
 private:
 	map < string, XTEMPLATE > PageTemplateMap;

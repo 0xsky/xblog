@@ -406,6 +406,7 @@ function GetPostList(){
                     strhtml += "<td>"+js[4]+"</td>";
                     strhtml += "<td>"+js[5]+"</td>";
                     strhtml += "<td><a href='/admin?action=editpost&id="+js[0]+"' target='mainFrame'>[edit]</a></td>";
+                    //strhtml += "<td><a href=javascript:void window.open('/admin?action=editpost&id="+js[0]+ "','newwindow', 'height=100, width=400, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, location=no, status=no')>[edit]</a></td>";
                     //strhtml += "<td><input type='submit' value='update' id='tdUpdate'></td></tr>";
                     strhtml += "<td><input type='submit' value='revert' id='BTpostRevert'><input type='submit' value='delete' id='BTpostDelete'></td></tr>";
                 });

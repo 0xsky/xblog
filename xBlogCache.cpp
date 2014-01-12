@@ -13,8 +13,8 @@
 
 xBlogCache *xBlogCache::GetInstance()
 {
-    static xBlogCache gData;
-    return &gData;
+    static xBlogCache gCache;
+    return &gCache;
 }
 
 string &xBlogCache::GetPage(const uint32 pageid)
@@ -69,6 +69,17 @@ void xBlogCache::delPost(const uint32 postid)
         }
     }
 }
+void xBlogCache::CacheClear()
+{
+    {
+        XLOCK(mPostCacheLock);
+        mPostCacheDataMap.clear();
+    }
+    {
+        XLOCK(mPageCacheLock);
+        mPageCacheDataMap.clear();
+    }
+}
 
 void xBlogCache::OnTimer()
 {
@@ -100,7 +111,7 @@ void xBlogCache::OnTimer()
             CACHEDATAMAPITER iter = mPageCacheDataMap.begin();
             for (; iter != mPageCacheDataMap.end();)
             {
-                    mPageCacheDataMap.erase(iter++);
+                mPageCacheDataMap.erase(iter++);
             }
         }
     }

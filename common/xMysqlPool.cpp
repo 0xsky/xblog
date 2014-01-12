@@ -133,7 +133,7 @@ void MysqlPool::FreeConnection(MYSQL * pMySql)
 
 bool MysqlPool::Execute(const char *sqlstring)
 {
-    //log_debug("MysqlPool::Execute %s\n", szSql);
+    log_debug("MysqlPool::Execute %s\n", sqlstring);
     bool bRet = false;
     MYSQL *pMySql = GetConnection();
 

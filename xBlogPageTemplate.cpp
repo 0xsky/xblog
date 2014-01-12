@@ -7,15 +7,12 @@
  */
  
 #include "xBlogPageTemplate.h"
+#include "xBlogCache.h"
 
-xBlogPageTemplate *xBlogPageTemplate::gXBlogPageTemplate = NULL;
 xBlogPageTemplate *xBlogPageTemplate::GetInstance()
 {
-	if (NULL == gXBlogPageTemplate)
-	{
-		gXBlogPageTemplate = new xBlogPageTemplate;
-	}
-	return gXBlogPageTemplate;
+    static xBlogPageTemplate gXBlogPageTemplate;
+	return &gXBlogPageTemplate;
 }
 
 XTEMPLATE & xBlogPageTemplate::GetFile(string filedir, string filename, XTEMPLATE & xtemplate, TEMPLATECB xCall)
@@ -32,7 +29,9 @@ XTEMPLATE & xBlogPageTemplate::GetFile(string filedir, string filename, XTEMPLAT
 		return xtemplate;
 	}
 
-	FILE * fp = fopen(strPath.c_str(), "rb");
+    log_debug("xBlogPageTemplate::GetFile path=%s \r\n", strPath.c_str());
+
+    FILE * fp = fopen(strPath.c_str(), "rb");
 
 	if (NULL==fp)
 	{
@@ -84,7 +83,6 @@ void xBlogPageTemplate::ReplacePageCache(string & strHtml)
 void xBlogPageTemplate::ReplacePageTemplate(string & html)
 {
 	string strKey;
-
 	map < string, XTEMPLATE >::iterator iter;
 	for (iter = PageTemplateMap.begin(); iter != PageTemplateMap.end(); ++iter)
 	{
@@ -129,6 +127,7 @@ void xBlogPageTemplate::ReplaceSiteConfig(string & strHtml)
 
 void xBlogPageTemplate::Init()
 {
+    xBlogCache::GetInstance()->CacheClear();
 	LoadTemplatePage();
 	LoadCachePage();
 	LoadCachePageData();
@@ -171,7 +170,7 @@ void xBlogPageTemplate::LoadCachePageData()
 	map < string, XTEMPLATE >::iterator iter;
 	for (iter = PageCacheMap.begin(); iter != PageCacheMap.end(); ++iter)
 	{
-		if (iter->second.templateCB)
+		if (NULL!=iter->second.templateCB)
 		{
 			string strValue = (iter->second).value;
 			iter->second.value = (this->*iter->second.templateCB) (strValue);
@@ -179,12 +178,12 @@ void xBlogPageTemplate::LoadCachePageData()
 	}
 }
 
-string xBlogPageTemplate::GetCacheIncludeCatalog(string & strHtml)
+string xBlogPageTemplate::GetCacheIncludeCatalog(const string & strHtml)
 {
     return xBlogData::GetInstance()->GetCacheIncludeCatalog(strHtml);
 }
 
-string xBlogPageTemplate::GetCacheIncludeLink(string & strHtml)
+string xBlogPageTemplate::GetCacheIncludeLink(const string & strHtml)
 {
     return xBlogData::GetInstance()->GetCacheIncludeLink(strHtml);
 }

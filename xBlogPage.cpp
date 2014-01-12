@@ -5,7 +5,6 @@
  * Distributed under GPL license.
  * ----------------------------------------------------------------------------
  */
- 
 
 #include "xBlogPage.h"
 #include "xMysqlPool.h"
@@ -95,14 +94,13 @@ void xBlogPage::SendFile(struct evhttp_request *req, const char *rootdir, const 
     
     evhttp_add_header(evhttp_request_get_output_headers(req),"Content-Type", type);
 
-    log_info(" xBlogPage::SendFile evb:%p fd:%d size:%d \r\n", evb, fd, st.st_size);
+    log_info("xBlogPage::SendFile evb:%p fd:%d size:%d \r\n", evb, fd, st.st_size);
     evbuffer_add_file(evb, fd, 0, st.st_size);
 
     evhttp_send_reply(req, 200, "OK", evb);
 
     goto done;
   err:
-    evhttp_send_error(req, 404, "Document was not found");
     if (fd >= 0)
         close(fd);
     SendErrorPage(req, NULL, 404);
@@ -119,14 +117,13 @@ void xBlogPage::AdminStatusCallback(struct evhttp_request *req, void *arg)
 {
     xBlog *pBlog = (xBlog *) arg;
 
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
-    log_info("xBlogPage::dump_status_cb \r\n");
+    log_info("xBlogPage::AdminStatusCallback \r\n");
 
     if (!CheckSession(req, pBlog))
     {
-        log_info("xBlogPage::post_manager_request_cb CheckSession error \r\n");
+        log_info("xBlogPage::AdminStatusCallback CheckSession error \r\n");
         SendLoginPage(req, pBlog);
         return;
     }
@@ -164,8 +161,7 @@ void xBlogPage::AdminSystemCallback(struct evhttp_request *req, void *arg)
 {
     xBlog *pBlog = (xBlog *) arg;
 
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     log_info("xBlogPage::AdminSystemCallback \r\n");
 
@@ -206,8 +202,7 @@ void xBlogPage::AdminSystemCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::AdminUserCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq evURLdata;
     xBlog *pBlog = (xBlog *) arg;
@@ -263,8 +258,7 @@ void xBlogPage::AdminShellCallback(struct evhttp_request *req, void *arg)
     struct evkeyvalq evPostData;
     xBlog *pBlog = (xBlog *) arg;
 
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     log_info("xBlogPage::AdminShellCallback \r\n");
     if (!CheckSession(req, pBlog))
@@ -322,17 +316,14 @@ void xBlogPage::AdminShellCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::IndexRequestCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
-    const char *PageId = "0";
-    RequestPage(req, PageId);
+    RequestPage(req, NULL);
 }
 
 void xBlogPage::PageRequestCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq GetData;
     xBlog::HttpParseURL(req, &GetData);
@@ -380,8 +371,7 @@ void xBlogPage::RequestPage(struct evhttp_request *req, const char *PageId)
 
 void xBlogPage::CatalogRequestCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq GetData;
     xBlog::HttpParseURL(req, &GetData);
@@ -403,9 +393,9 @@ void xBlogPage::CatalogRequestCallback(struct evhttp_request *req, void *arg)
 
     XTEMPLATE strHtml;
     xBlogPageTemplate::GetInstance()->BuildHtmlByTemplateKey(K_CATALOG, strHtml);
-    string strTemp = xBlogPageTemplate::GetInstance()->GetActiveTemplate(K_ARTICLE_MULTI);
-    string strData = xBlogData::GetInstance()->GetCatalogPage(strTemp, nCateId, nPageId);
-
+    string strData = xBlogPageTemplate::GetInstance()->GetActiveTemplate(K_ARTICLE_MULTI);
+    xBlogData::GetInstance()->GetCatalogPage(strData, nCateId, nPageId);
+    log_info("xBlogPage::CatalogRequestCallback %s \r\n", strData.c_str());
     StringReplace(strHtml.value, "<#template:article_multi#>", strData);
 
     char tmp[SIZE_32] = { 0 };
@@ -420,8 +410,7 @@ void xBlogPage::CatalogRequestCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::PostRequestCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq GetData;
 
@@ -461,8 +450,7 @@ void xBlogPage::PostRequestCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::GuestbookCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq GetData;
     xBlog::HttpParseURL(req, &GetData);
@@ -483,8 +471,7 @@ void xBlogPage::GuestbookCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::GuestPostCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq evPostData;
     struct evkeyvalq evURLdata;
@@ -524,8 +511,7 @@ void xBlogPage::GuestPostCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::AdminCheckLoginCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq post_data;
     xBlog *pBlog = (xBlog *) arg;
@@ -568,8 +554,7 @@ void xBlogPage::AdminCheckLoginCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::AdminPostManagerCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq evPostData;
     struct evkeyvalq evURLdata;
@@ -665,9 +650,9 @@ void xBlogPage::AdminPostManagerCallback(struct evhttp_request *req, void *arg)
         free(strClassify);
         free(strContent);
         free(strBrief);
-        
-        xBlogCache::GetInstance()->delPost(atoul(pID));
     }
+
+    xBlogCache::GetInstance()->CacheClear();
 
     strHtml += pAction;
     strHtml += " operation success!";
@@ -676,8 +661,7 @@ void xBlogPage::AdminPostManagerCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::AdminSiteConfigCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq evPostData;
     struct evkeyvalq evURLdata;
@@ -712,7 +696,11 @@ void xBlogPage::AdminSiteConfigCallback(struct evhttp_request *req, void *arg)
         const char *szId = evhttp_find_header(&evPostData, "id");
         const char *szValue = evhttp_find_header(&evPostData, "value");
 
-        xBlogData::GetInstance()->AdminGetSiteConfig_Update(szId, szValue);
+        bool bRet = xBlogData::GetInstance()->AdminGetSiteConfig_Update(szId, szValue);
+        if (bRet)
+        {
+            xBlogPageTemplate::GetInstance()->Init();
+        }
     }
     else
     {
@@ -725,8 +713,7 @@ void xBlogPage::AdminSiteConfigCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::AdminLinksCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq evPostData;
     struct evkeyvalq evURLdata;
@@ -776,8 +763,7 @@ void xBlogPage::AdminLinksCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::AdminCatalogCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq evPostData;
     struct evkeyvalq evURLdata;
@@ -842,8 +828,7 @@ void xBlogPage::AdminCatalogCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::AdminCommentsCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq evPostData;
     struct evkeyvalq evURLdata;
@@ -889,8 +874,7 @@ void xBlogPage::AdminCommentsCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::AdminCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     struct evkeyvalq GetData;
     xBlog *pBlog = (xBlog *) arg;
@@ -960,28 +944,11 @@ void xBlogPage::SendAdminPage(struct evhttp_request *req, xBlog *pBlog)
     SendFile(req, pBlog->szDir, ADMIN_PAGE);
 }
 
-
-// /* Response codes */
-// #define HTTP_OK            200    /**< request completed ok */
-// #define HTTP_NOCONTENT        204    /**< request does not have content */
-// #define HTTP_MOVEPERM        301    /**< the uri moved permanently */
-// #define HTTP_MOVETEMP        302    /**< the uri moved temporarily */
-// #define HTTP_NOTMODIFIED    304    /**< page was not modified from last */
-// #define HTTP_BADREQUEST        400    /**< invalid http request was made */
-// #define HTTP_NOTFOUND        404    /**< could not find content for uri */
-// #define HTTP_BADMETHOD        405     /**< method not allowed for this uri */
-// #define HTTP_ENTITYTOOLARGE    413    /**<  */
-// #define HTTP_EXPECTATIONFAILED    417    /**< we can't handle this expectation */
-// #define HTTP_INTERNAL           500     /**< internal error */
-// #define HTTP_NOTIMPLEMENTED     501     /**< not implemented */
-// #define HTTP_SERVUNAVAIL    503    /**< the server is not available */
-
-
 void xBlogPage::SendErrorPage(struct evhttp_request *req, xBlog *pBlog, uint32 errorcode)
 {
     switch(errorcode)
     {
-    case 404:
+    case HTTP_NOTFOUND:
         {
             if (NULL==pBlog)
             {
@@ -994,12 +961,12 @@ void xBlogPage::SendErrorPage(struct evhttp_request *req, xBlog *pBlog, uint32 e
             
             break;
         }
-    case 502:
+    case HTTP_INTERNAL:
         {
             evhttp_send_error(req, 502, "Bad Gateway.");
             break;
         }
-    case 503:
+    case HTTP_SERVUNAVAIL:
         {
             evhttp_send_error(req, errorcode, "服务器不可用!");
             break;
@@ -1204,9 +1171,9 @@ void xBlogPage::SendDocumentCallback(struct evhttp_request *req, void *arg)
     evhttp_send_reply(req, 200, "OK", evb);
     goto done;
   err:
-    evhttp_send_error(req, 404, "Document was not found");
     if (fd >= 0)
         close(fd);
+    SendErrorPage(req, pBlog, 404);
   done:
     if (decoded)
         evhttp_uri_free(decoded);
@@ -1220,8 +1187,7 @@ void xBlogPage::SendDocumentCallback(struct evhttp_request *req, void *arg)
 
 void xBlogPage::DownloadCallback(struct evhttp_request *req, void *arg)
 {
-    xBlog::DebugHttpGetCommand(req);
-    xBlog::DebugHttpHeader(req);
+    xBlog::HttpDebug(req);
 
     xBlog *pBlog = (xBlog *) arg;
     const char *docroot = (const char *) pBlog->szDir;

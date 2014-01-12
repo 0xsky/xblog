@@ -14,20 +14,16 @@
 #include <sstream>
 using namespace std;
 
-xBlogData *xBlogData::gData = NULL;
 xBlogData *xBlogData::GetInstance()
 {
-	if (NULL == gData)
-	{
-		gData = new xBlogData;
-	}
-	return gData;
+    static xBlogData gData;
+	return &gData;
 }
 
 bool xBlogData::GetSiteConfig(BLOGSITECONFIG &configmap)
 {
     stringstream strSQL;
-    strSQL << "SELECT * FROM  xb_siteconfig LIMIT 100;";
+    strSQL << "SELECT Fid, Fkey, Fvalue FROM  xb_siteconfig LIMIT 100;";
     MYSQL_RES *pRes = pMysqlPool->Select(strSQL.str().c_str());
 
     log_debug("%s \r\n", strSQL.str().c_str());
@@ -44,7 +40,7 @@ bool xBlogData::GetSiteConfig(BLOGSITECONFIG &configmap)
         return true;
     }
         
-    log_error(" error \r\n");
+    log_error("error \r\n");
     return false;
 }
 
@@ -97,12 +93,13 @@ string xBlogData::GetArticleList(string & strHtml, const uint32 page)
     return strData;
 }
 
-string xBlogData::GetCatalogPage(string & strHtml, const uint32 catalog, const uint32 page)
+bool xBlogData::GetCatalogPage(string & strHtml, const uint32 catalog, const uint32 page)
 {
     int start = 0;
     char szSQL[SIZE_1024] = { 0 };
-    string strData;
-    
+    string strTmpl = strHtml;
+    strHtml = "";
+
     int num = atoul(Config::GetInstance()->xBlogSiteConfigMap["XBLOG_MAX_VIEW"].c_str());
     if (0 == num)
     {
@@ -110,7 +107,7 @@ string xBlogData::GetCatalogPage(string & strHtml, const uint32 catalog, const u
     }
     start = (page==0)?0:(page * num);
 
-    snprintf(szSQL,sizeof(szSQL),
+    snprintf(szSQL, sizeof(szSQL),
             "SELECT xb_posts.ID,xb_users.user_nicename, xb_posts.post_date, xb_posts.post_content, xb_posts.post_brief,\
                    xb_posts.post_title, IFNULL(xb_classify.classify_name,'未知'), xb_posts.post_modified, xb_posts.post_url, COUNT(xb_comments.comment_post_ID)\
                    FROM `xb_posts` \
@@ -125,11 +122,9 @@ string xBlogData::GetCatalogPage(string & strHtml, const uint32 catalog, const u
     if (NULL!=pRes)
     {
         MYSQL_ROW row;
-
         while ((row = mysql_fetch_row(pRes)))
         {
-            string strTemp = strHtml;
-
+            string strTemp = strTmpl;
             char szCataID[SIZE_32] = { 0 };
             snprintf(szCataID, sizeof(szCataID), "%d", catalog);
             StringReplace(strTemp, "<#article/category/id#>", szCataID);
@@ -141,12 +136,17 @@ string xBlogData::GetCatalogPage(string & strHtml, const uint32 catalog, const u
             StringReplace(strTemp, "<#article/category/name#>", row[6]);
             StringReplace(strTemp, "<#article/commnums#>", row[9]);
 
-            strData += strTemp;
+            strHtml += strTemp;
         }
         pMysqlPool->FreeRecord(pRes);
     }
-    strHtml = strData;
-    return strData;
+    else
+    {
+        return false;
+    }
+    
+
+    return true;
 }
 
 string xBlogData::GetArticleCommentList(string & strHtml, const uint32 postid)
@@ -182,7 +182,7 @@ string xBlogData::GetArticleCommentList(string & strHtml, const uint32 postid)
     return strData;
 }
 
-string xBlogData::GetCacheIncludeCatalog(string & strHtml)
+string xBlogData::GetCacheIncludeCatalog(const string & strHtml)
 {
     const char *szSQL =    "select xb_posts.post_classify,IFNULL(xb_classify.classify_name,'未知'), count(xb_posts.post_classify) \
                  from xb_posts \
@@ -212,7 +212,7 @@ string xBlogData::GetCacheIncludeCatalog(string & strHtml)
     return strData;
 }
 
-string xBlogData::GetCacheIncludeLink(string & strHtml)
+string xBlogData::GetCacheIncludeLink(const string & strHtml)
 {
     const char *szSQL = "SELECT link_url, IFNULL(link_name, ' ') FROM xb_links  where link_visible='Y'  ORDER BY link_id ASC ; ";
 

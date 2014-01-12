@@ -47,6 +47,19 @@ void xBlog::OnTimer()
     xBlogCache::GetInstance()->OnTimer();
 }
 
+void xBlog::HttpDebug(struct evhttp_request *req)
+{
+#ifdef _WIN32
+    if ("DEBUG"==Config::GetInstance()->xBlogAppConfig.LogLevel)
+#else
+        if (LOG_LEVEL_DEBUG==LOGGER._level)
+#endif
+    {
+        xBlog::DebugHttpGetCommand(req);
+        xBlog::DebugHttpHeader(req);
+    }
+}
+
 void xBlog::DebugHttpHeader(struct evhttp_request *req)
 {
     struct evkeyval *header;
@@ -133,7 +146,8 @@ void xBlog::SendHttpResphone(struct evhttp_request *req, const string & strData)
         return;
     }
 
-    evbuffer_add_printf(buf, "%s", strData.c_str());
+    int ret = evbuffer_add_printf(buf, "%s", strData.c_str());
+    log_debug("evbuffer_add_printf ret= %d length=%d \r\n", ret, strData.length());
 
     evhttp_add_header(evhttp_request_get_output_headers(req),
                       "Content-Type", "text/html; charset=utf-8");
@@ -228,7 +242,7 @@ bool xBlog::Run(const char *ip, uint16 port, uint32 timeout_secs, uint32 nthread
         }
 
         ret = evhttp_accept_socket(httpd, skt);
-        if (r != 0)
+        if (ret != 0)
         {
             return false;
         }

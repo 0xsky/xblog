@@ -6,6 +6,11 @@
  * ----------------------------------------------------------------------------
  */
  
+#ifdef _WIN32
+
+
+#else
+
 #include "xLog.h"
 #include <string.h>
 
@@ -223,4 +228,5 @@ void CLogger::setMaxFileIndex( int maxFileIndex )
     _maxFileIndex = maxFileIndex;
 }
 
+#endif
 /////////////
