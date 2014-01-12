@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="<#XBLOG_LANGUAGE#>">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Language" content="<#XBLOG_LANGUAGE#>" />
+	<title><#XBLOG_TITLE#>-<#XBLOG_SUB_TITLE#></title>
+    <link href="./themes/<#XBLOG_THEME#>/style/css/bootstrap.css" rel="stylesheet">
+    <link href="./themes/<#XBLOG_THEME#>/style/css/css.css" rel="stylesheet">	
+</head>
+<body>
+
+<#CACHE_INCLUDE_NAVBAR#>
+<div class="articles">
+  <#template:article_multi#>
+  <div class="pagebar">
+    <a class="pull-left" href="/catalog?cate=<#article/category/id#>&page=<#template:pagebar_previous#>">上一页<a>
+    <a class="pull-right" href="/catalog?cate=<#article/category/id#>&page=<#template:pagebar_next#>">下一页</a>
+  </div>
+</div>
+
+<div class="right-bar">
+  <h4>分类目录</h4>
+  <div class="catalog nopadding">
+  <#CACHE_INCLUDE_CATALOG#>
+  </div>
+  <h4>功能</h4>
+  <div class="catalog">
+  <#CACHE_INCLUDE_MISC#>
+  </div>
+  <h4>文章</h4>
+  <div class="catalog">
+  <#CACHE_INCLUDE_ARCHIVES#>
+  </div>
+  <h4>链接</h4>
+  <div class="catalog">
+  <#CACHE_INCLUDE_LINKS#>
+  </div>
+  <div class="footer">
+    <hr />
+    <p>Powered By 
+	  <a href="http://www.0xsky.com/" title="xSkyBlog">xSkyBlog <#XBLOG_VERSION#></a><br />
+	  <#XBLOG_COPYRIGHT#>.
+	</p>
+  </div>
+</div>
+
+
+</body>
+</html>
