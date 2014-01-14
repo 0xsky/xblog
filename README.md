@@ -18,7 +18,8 @@ xblog
 
 ###安装 xBlog
     1.安装 libevent
-      yum install libevent or apt-get install libevent-dev
+      yum install mysql-devel libevent 
+      apt-get install libevent-dev libmysqlclient-dev
     2.编译 xblog
       svn co https://github.com/0xsky/xblog.git xblog
       make
