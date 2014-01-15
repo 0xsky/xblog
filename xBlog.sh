@@ -1,13 +1,15 @@
 #!/bin/bash
 
-# ¹ÜÀíÓ¦ÓÃ³ÌÐòÍ¨ÓÃ½Å±¾
+# ç®¡ç†åº”ç”¨ç¨‹åºé€šç”¨è„šæœ¬
 # By: xSky
-# 
+#
 
-# Ó¦ÓÃ³ÌÐòÃû
+# åº”ç”¨ç¨‹åºå
 appname=xblog
-#ÈÕÖ¾ÎÄ¼þÃû±êÊ¶
+#æ—¥å¿—æ–‡ä»¶åæ ‡è¯†
 logflag=xblog
+
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 cfont()
 {
@@ -72,7 +74,7 @@ start() {
     fi
     cfont -cyan "Now run the " -yellow  "[" -green "$appname" -yellow "]." -cyan " Please waite..." -reset -n
     nohup ./$appname &>/dev/null &
-    sleep 2         #ÕâÀïÒªµÈ¼¸ÃëµÈ³ÌÐòÔËÐÐÆðÀ´£¬²»È»È¡²»µ½½ø³ÌID
+    sleep 2         #ï¿½ï¿½ï¿½ï¿½Òªï¿½È¼ï¿½ï¿½ï¿½È³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È»È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
     apppid=$(pidof $appname)
     cfont -cyan "The " -yellow  "[" -green "$appname" -yellow "]" -cyan " is started successful! The pid is " -yellow "[" -green "$apppid" -yellow "]." -reset -n
 }
