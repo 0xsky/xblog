@@ -327,15 +327,15 @@ void xBlog::SetRouteTable(evhttp * http)
     // 管理后台功能
     evhttp_set_cb(http, "/admin",        xBlogPage::AdminCallback, this);            // 管理后台
     evhttp_set_cb(http, "/checklogin",   xBlogPage::AdminCheckLoginCallback, this);  // 权限验证
-    evhttp_set_cb(http, "/shell",        xBlogPage::AdminShellCallback, this);       // 测试
-    evhttp_set_cb(http, "/status",       xBlogPage::AdminStatusCallback, this);      // 测试
+    evhttp_set_cb(http, "/shell",        xBlogPage::AdminShellCallback, this);       // 系统SHELL
+    evhttp_set_cb(http, "/status",       xBlogPage::AdminStatusCallback, this);      // 程序状态
     evhttp_set_cb(http, "/postmanager",  xBlogPage::AdminPostManagerCallback, this); // 文章管理
     evhttp_set_cb(http, "/siteconfig",   xBlogPage::AdminSiteConfigCallback, this);  // 网站配置参数管理
     evhttp_set_cb(http, "/links",        xBlogPage::AdminLinksCallback, this);       // 链接管理
     evhttp_set_cb(http, "/catalogset",   xBlogPage::AdminCatalogCallback, this);     // 链接管理
     evhttp_set_cb(http, "/comments",     xBlogPage::AdminCommentsCallback, this);    // 留言评论管理
-    evhttp_set_cb(http, "/system",       xBlogPage::AdminSystemCallback, this);      // 系统配置
-    evhttp_set_cb(http, "/user",         xBlogPage::AdminUserCallback, this);        // 系统配置
+    evhttp_set_cb(http, "/system",       xBlogPage::AdminSystemCallback, this);      // 
+    evhttp_set_cb(http, "/user",         xBlogPage::AdminUserCallback, this);        // 
 
     evhttp_set_timeout(http, Config::GetInstance()->xBlogAppConfig.HttpdTimeOut);
 
