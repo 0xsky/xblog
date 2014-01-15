@@ -15,7 +15,7 @@ void version()
     log_info("xBlog version=%s evHttpd=%s:%d bits=%d\n",
         XBLOG_VERSION,
         event_get_version(),
-        (int)event_get_version_number,
+        (int)event_get_version_number(),
         sizeof(long) == 4 ? 32 : 64);
 }
 
