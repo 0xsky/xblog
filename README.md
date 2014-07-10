@@ -1,6 +1,13 @@
 xblog
 =====
+xBlog is a simple, high-speed, customizable blog app developed by C++
+<p>
+Simple: Simple and compact design, the main program environment to support only a single executable file without HTTPD, PHP, etc.. 
+High speed: pure C + + development, support for multi-threading, MYSQL connection pooling support, and support for hot data cache. 
+Flexible: rich customization features and flexible page module based xhtml + css template structure, giving full rights to user-defined. 
+Multi-platform: C / C + + development, the perfect support for LINUX, WINDOWS, Raspberry Pi and other platforms. . 
 
+====
 <p>欢迎使用xBlog系统
 <p>C++打造的简单高速可定制博客
 <p><p>
