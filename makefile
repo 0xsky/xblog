@@ -3,15 +3,18 @@
 ######################################################################
 CC          := g++
 SRC_DIR     := *.cpp ./common/*.cpp ./common/json/*.cpp
+#INC_DIR中，非默认路径，添加自己的对应路径，比如webscalesql：/usr/local/mysql/include
 INC_DIR     := /usr/include/mysql
 INC_DIR     += ./include 
 INC_DIR     += ./common
-
+#自定义webscalesqlclient_r等的路径，加入-Wl,-rpath保证程序运行时也能找到
+#LIB_DIR     += -L/usr/local/mysql/lib -Wl,-rpath /usr/local/mysql/lib
 
 INSTALL_PATH := .
 
 SRC_FILES   := $(wildcard $(SRC_DIR))
 OBJ_FILES   := $(SRC_FILES:.cpp=.o)
+#如果使用webscalesql改为：webscalesqlclient_r z m event
 LD_LIBS     := mysqlclient_r z m event
 
 APP_NAME    := xblog
