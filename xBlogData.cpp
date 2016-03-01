@@ -75,7 +75,7 @@ string xBlogData::GetArticleList(string & strHtml, const uint32 page)
         {
             string strTemp = strHtml;
 
-            StringReplace(strTemp, "<#article/category/id#>", "3");
+            StringReplace(strTemp, "<#article/category/id#>", "row[3]");
             StringReplace(strTemp, "<#article/title#>", row[5]);
             StringReplace(strTemp, "<#article/posttime/longdate#>", row[2]);
             StringReplace(strTemp, "<#article/intro#>", row[4]);
