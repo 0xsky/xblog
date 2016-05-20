@@ -12,36 +12,29 @@
 
 void xBlog::SetRouteTable(evhttp * http)
 {
-    //evhttp_set_cb(http, "/download",     xBlogPage::DownloadCallback, this);        // 测试
-    evhttp_set_cb(http, "/", xBlog::IndexRequestCallback, this);                // 首页
-    evhttp_set_cb(http, "/index.htm", xBlog::IndexRequestCallback, this);       // 首页
-    evhttp_set_cb(http, "/index.html", xBlog::IndexRequestCallback, this);      // 首页
-    evhttp_set_cb(http, "/postlist", xBlog::PostlistRequestCallback, this);     // 请求文章列表
-    evhttp_set_cb(http, "/post", xBlog::PostRequestCallback, this);             // 请求文章
-    evhttp_set_cb(http, "/classify", xBlog::ClassifyRequestCallback, this);     // 请求分类
-    evhttp_set_cb(http, "/links", xBlog::LinksRequestCallback, this);           // 请求链接列表
-    evhttp_set_cb(http, "/config", xBlog::ConfigCallback, this);                // 查看-留言
-    evhttp_set_cb(http, "/postview", xBlog::PostviewCallback, this);            // 查看-留言
-    evhttp_set_cb(http, "/paging",  xBlog::PagingCallback, this);               // 添加-评论留言
-    evhttp_set_cb(http, "/catalog",      xBlog::CatalogRequestCallback, this);  // 分类
-    evhttp_set_cb(http, "/infogape", xBlog::InfopageRequestCallback, this);  // 分类
+    evhttp_set_cb(http, "/", xBlog::IndexRequestCallback, this);                // 
+    evhttp_set_cb(http, "/index.htm", xBlog::IndexRequestCallback, this);       // 
+    evhttp_set_cb(http, "/index.html", xBlog::IndexRequestCallback, this);      // 
+    evhttp_set_cb(http, "/postlist", xBlog::PostlistRequestCallback, this);     // 
+    evhttp_set_cb(http, "/post", xBlog::PostRequestCallback, this);             // 
+    evhttp_set_cb(http, "/classify", xBlog::ClassifyRequestCallback, this);     // 
+    evhttp_set_cb(http, "/links", xBlog::LinksRequestCallback, this);           // 
+    evhttp_set_cb(http, "/config", xBlog::ConfigCallback, this);                // 
+    evhttp_set_cb(http, "/postview", xBlog::PostviewCallback, this);            // 
+    evhttp_set_cb(http, "/paging",  xBlog::PagingCallback, this);               // 
+    evhttp_set_cb(http, "/catalog",      xBlog::CatalogRequestCallback, this);  // 
+    evhttp_set_cb(http, "/infogape", xBlog::InfopageRequestCallback, this);     // 
 
     // 管理后台功能
-    evhttp_set_cb(http, "/admin", xBlog::AdminCallback, this);                     // 管理后台
-    evhttp_set_cb(http, "/checklogin", xBlog::AdminCheckLoginCallback, this);      // 权限验证
-    evhttp_set_cb(http, "/admin_post", xBlog::AdminPostManager_Callback, this);    // 文章管理
-    evhttp_set_cb(http, "/admin_links", xBlog::AdminLinks_Callback, this);         // 链接管理
-    evhttp_set_cb(http, "/admin_config", xBlog::AdminSiteConfig_Callback, this);   // 网站配置参数管理
-    evhttp_set_cb(http, "/admin_catalog", xBlog::AdminCatalog_Callback, this);     // 链接管理
-    //evhttp_set_cb(http, "/comments",     xBlog::AdminCommentsCallback, this);    // 留言评论管理
-    //evhttp_set_cb(http, "/system",       xBlog::AdminSystemCallback, this);      // 系统配置
-    //evhttp_set_cb(http, "/user",         xBlog::AdminUserCallback, this);        // 系统配置
+    evhttp_set_cb(http, "/admin", xBlog::AdminCallback, this);                     // 
+    evhttp_set_cb(http, "/checklogin", xBlog::AdminCheckLoginCallback, this);      // 
+    evhttp_set_cb(http, "/admin_post", xBlog::AdminPostManager_Callback, this);    // 
+    evhttp_set_cb(http, "/admin_links", xBlog::AdminLinks_Callback, this);         // 
+    evhttp_set_cb(http, "/admin_config", xBlog::AdminSiteConfig_Callback, this);   // 
+    evhttp_set_cb(http, "/admin_catalog", xBlog::AdminCatalog_Callback, this);     // 
 
-    evhttp_set_cb(http, "/ueditor1_4_3_2-src/uecontroller", xBlog::UEControllerCallback, this);        // 系统配置
-    //evhttp_set_cb(http, "/ueditor1_4_3_2-src/uecontroller", xBlog::UEControllerCallback, this);        // 系统配置
-    
+    evhttp_set_cb(http, "/ueditor1_4_3_2-src/uecontroller", xBlog::UEControllerCallback, this);  
 
- //   evhttp_set_timeout(http, Config::GetInstance()->xBlogAppConfig.HttpdTimeOut);
     evhttp_set_timeout(http, 5);
     evhttp_set_gencb(http, xBlog::SendDocumentCallback, this);
 }
@@ -250,38 +243,6 @@ void xBlog::PagingCallback(struct evhttp_request *req, void *arg)
     }
 }
 
-
-/***********************************************************************************/
-
-//bool xBlog::CheckSession(struct evhttp_request * req)
-//{
-//    struct evkeyvalq *headers;
-//    struct evkeyvalq evCookie;
-//
-//    //return true;
-//
-//    headers = evhttp_request_get_input_headers(req);
-//    const char *szCookie = xBlog::GetVal(headers, "Cookie");
-//
-//    if (NULL == szCookie) {
-//        log_info(" can not find Cookie \r\n");
-//        return false;
-//    }
-//
-//    evhttp_parse_query_str(szCookie, &evCookie);
-//    char szToken[128] = { 0 };
-////    GetSubStr((char *)szCookie, "token=", ";", szToken);
-//    if (strlen(szToken) > 0) {
-//        uint64_t nToken = atoull(szToken);
-//        log_info("%llu %llu-%s \r\n", LoginToken, nToken, szToken);
-//
-//        if (LoginToken == nToken) {
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-
 void xBlog::AdminCallback(struct evhttp_request *req, void *arg)
 {
     xBlog::HttpDebug(req);
@@ -290,48 +251,9 @@ void xBlog::AdminCallback(struct evhttp_request *req, void *arg)
     xBlog::HttpParseURL(req, &GetData);
 
     if (!pBlog->checksession(req)) {
-        //pBlog->SendDocument(req, "/admin/login.htm");
         return;
     } else {
         pBlog->SendDocument(req, "/admin/admin.htm");
-    }
-}
-
-void xBlog::AdminCheckLoginCallback(struct evhttp_request *req, void *arg)
-{
-    xBlog::HttpDebug(req);
-    struct evkeyvalq post_data;
-    xBlog *pBlog = (xBlog *)arg;
-    xBlog::GetHttpPostData(req, &post_data);
-
-    const char *pUserName = xBlog::GetVal(&post_data, "UserName");
-    const char *pPasswd = xBlog::GetVal(&post_data, "password");
-    log_info(" username:%s  passwd:%s \r\n", pUserName, pPasswd);
-
-    if ((NULL == pUserName) || (NULL == pPasswd)) {
-        pBlog->SendDocument(req, "/admin/login.htm");
-        return;
-    }
-
-    if ((0 != strcmp(pUserName, pBlog->blogconfig.user.c_str())) 
-        || (0 != strcmp(pPasswd, pBlog->blogconfig.pass.c_str()))) {
-        pBlog->SendDocument(req, "/admin/login.htm");
-        return;
-    } else {
-        // 认证成功
-        pBlog->LoginToken = CreatSession();
-        log_debug("xBlogPage::AdminCheckLoginCallback %llu \r\n", pBlog->LoginToken);
-
-        char token[128] = { 0 };
-        evutil_snprintf(token, sizeof(token), "token=%lu;", pBlog->LoginToken);
-        evhttp_add_header(evhttp_request_get_output_headers(req), "Set-Cookie", token);
-        token[0] = '\0';
-        evutil_snprintf(token, sizeof(token), "tokentime=%u;", (uint32_t)time(NULL));
-        evhttp_add_header(evhttp_request_get_output_headers(req), "Set-Cookie", token);
-        evhttp_add_header(evhttp_request_get_output_headers(req), "Location", "/admin/admin.htm");
-        // 跳转到后台主页面
-        evhttp_send_reply(req, HTTP_MOVETEMP, "", NULL);
-        return;
     }
 }
 

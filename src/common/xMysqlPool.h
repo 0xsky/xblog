@@ -53,7 +53,6 @@ public:
     void Keepalive();
     void escape_string(const string &strin, string &out);
 
-
 private:
     MYSQL *get_connection();
     void free_connection(MYSQL *mysql);

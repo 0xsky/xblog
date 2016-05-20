@@ -18,24 +18,6 @@
 #include <arpa/inet.h>
 #endif
 
-const char *GuessContentType(const char *path)
-{
-    const char *last_period, *extension;
-    const struct table_entry *ent;
-    const char *type = "text/json";
-    last_period = strrchr(path, '.');
-    if (!last_period || strchr(last_period, '/')) {
-
-    } else {
-        extension = last_period + 1;
-        for (ent = &content_type_table[0]; ent->extension; ++ent) {
-            if (!stricmp(ent->extension, extension)) {
-                type = ent->content_type;
-            }
-        }
-    }
-    return type;
-}
 
 xBlog::xBlog()
 {
@@ -70,14 +52,6 @@ void xBlog::OnTimer()
     //log_debug("void xBlog::OnTimer()\n");
 }
 
-/**
-base64 Encode a buffer (NUL terminated)
-@param in      The input buffer to encode
-@param inlen   The length of the input buffer
-@param out     [out] The destination of the base64 encoded data
-@param outlen  [in/out] The max size and resulting size
-@return 0 if successful
-*/
 int xBlog::base64_encode(const unsigned char *in, unsigned long inlen, unsigned char *out, unsigned long *outlen)
 {
     static const char *codes = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -89,7 +63,6 @@ int xBlog::base64_encode(const unsigned char *in, unsigned long inlen, unsigned 
     assert(out != NULL);
     assert(outlen != NULL);
 
-    /* valid output size ? */
     len2 = 4 * ((inlen + 2) / 3);
     if (*outlen < len2 + 1) {
         *outlen = len2 + 1;
@@ -104,7 +77,7 @@ int xBlog::base64_encode(const unsigned char *in, unsigned long inlen, unsigned 
         *p++ = codes[in[2] & 0x3F];
         in += 3;
     }
-    /* Pad it if necessary...  */
+
     if (i < inlen) {
         unsigned a = in[0];
         unsigned b = (i + 1 < inlen) ? in[1] : 0;
@@ -115,12 +88,51 @@ int xBlog::base64_encode(const unsigned char *in, unsigned long inlen, unsigned 
         *p++ = '=';
     }
 
-    /* append a NULL byte */
     *p = '\0';
 
-    /* return ok */
     *outlen = p - out;
     return 0;
+}
+
+const char *xBlog::GuessContentType(const char *path)
+{
+    static const struct table_entry {
+        const char *extension;
+        const char *content_type;
+    } content_type_table[] = {
+            { "txt", "text/plain" },
+            { "c", "text/plain" },
+            { "h", "text/plain" },
+            { "js", "application/x-javascript" },
+            { "html", "text/html" },
+            { "htm", "text/html" },
+            { "css", "text/css" },
+            { "gif", "image/gif" },
+            { "jpg", "image/jpeg" },
+            { "ico", "image/gif" },
+            { "jpeg", "image/jpeg" },
+            { "png", "image/png" },
+            { "pdf", "application/pdf" },
+            { "ps", "application/postsript" },
+            { "swf", "application/x-shockwave-flash" },
+            { NULL, NULL },
+    };
+    const char *last_period, *extension;
+    const struct table_entry *ent;
+    const char *type = "text/json";
+    last_period = strrchr(path, '.');
+    if (!last_period || strchr(last_period, '/')) {
+
+    }
+    else {
+        extension = last_period + 1;
+        for (ent = &content_type_table[0]; ent->extension; ++ent) {
+            if (!stricmp(ent->extension, extension)) {
+                type = ent->content_type;
+            }
+        }
+    }
+    return type;
 }
 
 bool xBlog::checkauth(const char *auth)

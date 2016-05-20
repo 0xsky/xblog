@@ -25,31 +25,8 @@ string tostring(const T& t) {
     return  oss.str();
 }
 
-#define SERVER_SIGNATURE "xBlog server v0.0.1"
+#define SERVER_SIGNATURE "xBlog Server 0.1"
 
-static const struct table_entry {
-    const char *extension;
-    const char *content_type;
-} content_type_table[] = {
-        { "txt", "text/plain" },
-        { "c", "text/plain" },
-        { "h", "text/plain" },
-        { "js", "application/x-javascript" },
-        { "html", "text/html" },
-        { "htm", "text/html" },
-        { "css", "text/css" },
-        { "gif", "image/gif" },
-        { "jpg", "image/jpeg" },
-        { "ico", "image/gif" },
-        { "jpeg", "image/jpeg" },
-        { "png", "image/png" },
-        { "pdf", "application/pdf" },
-        { "ps", "application/postsript" },
-        { "swf",  "application/x-shockwave-flash" },
-        { NULL, NULL },
-};
-
-const char *GuessContentType(const char *path);
 
 typedef struct _XBLOGCONFIG_
 {
@@ -69,6 +46,7 @@ public:
 
     bool checksession(struct evhttp_request *req);
     bool checkauth(const char *auth);
+    const char *GuessContentType(const char *path);
     static int base64_encode(const unsigned char *in, unsigned long inlen, unsigned char *out, unsigned long *outlen);
     static void HttpDebug(struct evhttp_request *req);
     static void DebugHttpHeader(struct evhttp_request *req);
@@ -116,19 +94,6 @@ private:
     static void AdminCatalog_Callback(struct evhttp_request *req, void *arg);
 private:
     bool LoadConfig(BLOGCONFIG &cfg);
-   // bool checksession(struct evhttp_request * req);
-    static bool parase_form_data(const char* data, std::string &name, std::string &val)
-    {
-        int name_len = strlen("name=\"");
-        const char* pstart = strstr(data, "name=\"") + name_len;
-        const char* pend = strstr(pstart, "\"\r\n");
-        name.assign(pstart, pend - pstart);
-        pstart = strstr(pstart, "\r\n\r\n");
-        val = pstart + 4;
-        return true;
-    }
-   
-
 
 public:
     uint64_t LoginToken;
