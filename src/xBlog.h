@@ -33,6 +33,7 @@ typedef struct _XBLOGCONFIG_
     string theme;
     string user;
     string pass;
+    string auth;
 } BLOGCONFIG, *PBLOGCONFIG;
 
 class xBlog{

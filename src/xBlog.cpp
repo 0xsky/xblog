@@ -142,17 +142,7 @@ bool xBlog::checkauth(const char *auth)
     p += strlen("Basic ");
     //log_debug("xBlog::checkauth  %s \r\n", p);
 
-    std::string strKey;
-    strKey = blogconfig.user;
-    strKey += ":";
-    strKey += blogconfig.pass;
-
-    unsigned long  in_len = strKey.length();
-    unsigned long  out_len = sizeof(user_key);
-    int ret = base64_encode((unsigned char*)strKey.c_str(), in_len, user_key, &out_len);
-    //log_debug("xBlog::checkauth ret:%d %s user_key: %s \r\n", ret, strKey.c_str(),user_key);
-
-    return (0==ret)&&(0==strcmp(p, (char*)user_key));
+    return (0==strcmp(p, blogconfig.auth.c_str()));
 }
 
 bool xBlog::checksession(struct evhttp_request *req)
@@ -477,9 +467,21 @@ bool xBlog::LoadConfig(BLOGCONFIG &cfg)
     cfg.theme = row[0];
     cfg.user = row[1];
     cfg.pass = row[2];
-    log_debug("theme:%s ", cfg.theme.c_str());
- 
     mysqlclient->free_res(pRes);
+    
+    log_debug("theme:%s ", cfg.theme.c_str());
+
+    unsigned char user_key[128] = { 0 };
+    std::string strKey;
+    strKey = cfg.user;
+    strKey += ":";
+    strKey += cfg.pass;
+
+    unsigned long  in_len = strKey.length();
+    unsigned long  out_len = sizeof(user_key);
+    int ret = base64_encode((unsigned char*)strKey.c_str(), in_len, user_key, &out_len);
+    cfg.auth = user_key;
+
     return true;
 }
 
