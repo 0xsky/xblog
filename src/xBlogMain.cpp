@@ -58,8 +58,6 @@ int main(int argc, char **argv)
     log_info("CacheTimer:%d \n",   Config::GetInstance()->xBlogAppConfig.CacheTimer);
 
     xBlog xblog;
-
-    xblog.StartMysqlPool();
     xblog.Init();
 
     bool bRet = xblog.Run(Config::GetInstance()->xBlogAppConfig.ServerIp.c_str(),

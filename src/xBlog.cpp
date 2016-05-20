@@ -44,6 +44,8 @@ bool xBlog::Init()
     strncpy(szDir, Config::GetInstance()->strRootFullPath.c_str(), 
                 Config::GetInstance()->strRootFullPath.length());
 
+    StartMysqlPool();
+
     return LoadConfig(blogconfig);
 }
 
@@ -444,11 +446,6 @@ void xBlog::StartMysqlPool()
                                                Config::GetInstance()->xBlogMysqlcfg.dbname.c_str());
     mysqlclient->create_pool(Config::GetInstance()->xBlogMysqlcfg.poolsize);
     
-    bool bRet = Config::GetInstance()->LoadxBlogSiteConfig();
-    if (!bRet) {
-        log_error("xBlog::StartMysqlPool() site config error, exit\r\n");
-        exit(0);
-    }
 }
 
 bool xBlog::LoadConfig(BLOGCONFIG &cfg)

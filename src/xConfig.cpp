@@ -86,7 +86,3 @@ bool Config::LoadxBlogAppConfig(CIniFile &iniFile)
 	return true;
 }
 
-bool Config::LoadxBlogSiteConfig()
-{
-	return true;
-}
