@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>xSky 实验室-关注网络编程,高性能计算,分布式系统,分布式存储</title>
+    <link rel="alternate" type="application/rss+xml" href="http://www.0xsky.com/rss.xml" title="xSky 实验室" />
+    <link rel="stylesheet" type="text/css" href="/themes/xSky1/css/style.css">
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+    <script src="/themes/xSky1/xblog.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="page">
+        <div id="header">
+            <div class="top-links">
+                <li><a href="/guestbook">关于我</a></li>
+                <li><a href="/admin/admin.htm" target="_blank">Admin</a></li>
+            </div>
+            <div id="headerimg">
+                <a id="blog_title" class="title" href="/index.htm">title</a>
+                <span id="blog_description" class="description">description</span>
+            </div>
+            <hr>
+            <div id="content" class="narrowcolumn">
+                <div id="postlist"></div>
+                <div class="navigation">
+                    <div class="alignleft">上一页</div>
+                    <div class="page"> 1 2 3</div>
+                    <div class="alignright">下一页</div>
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+            <div id="sidebar">
+                <ul>
+                    <li id="categories_list" class="widget widget_categories">
+                        <h2 class="widgettitle">分类目录</h2>
+                        <ul>
+                            <div id="categories"></div>
+                        </ul>
+                    </li>
+                    <li id="archives" class="widget widget_categories">
+                        <h2 class="widgettitle">最新文章</h2>
+                        <ul> 
+                            <div id="postview"></div>
+                        </ul>
+                    </li>
+                    <li id="archives" class="widget widget_link">
+                        <h2 class="widgettitle">链接</h2>
+                        <ul>
+                            <div id="widget_link"></div>
+                        </ul>
+                    </li>
+                    <li id="search" class="widget widget_search">
+                        <form method="post" action="/cmd?act=Search">
+                            <p style="height: 20px">
+                                <input type="text" style="width: 140px" name="edtSearch" id="edtSearch" size="12" />
+                                <input type="submit" value=">>" name="btnPost" id="btnPost" />
+                            </p>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <div id="footer">
+                <p>
+                    Powered By <a href="http://www.0xsky.com/" title="xSkyBlog">xblog</a>
+                    <br> Copyright 0xsky.com All Rights Reserved.
+                </p>
+            </div>
+        </div>
+</body>
+</html>

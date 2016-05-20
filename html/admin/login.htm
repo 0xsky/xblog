@@ -1,0 +1,60 @@
+﻿
+<html>
+<head>
+<title>管理员登录</title>
+<script language=javascript>
+	function CheckForm()
+	{
+		if(document.Login.UserName.value=="")
+		{
+			alert("请输入用户名！");
+			document.Login.UserName.focus();
+			return false;
+		}
+		if(document.Login.Password.value == "")
+		{
+			alert("请输入密码！");
+			document.Login.Password.focus();
+			return false;
+		}
+	}
+</script>
+<style type="text/css">
+html {background-color: #eee; font-family: sans;}
+body {background-color: #fff; border: 1px solid #ddd;padding: 15px; margin: 15px;}
+pre {background-color: #eee; border: 1px solid #ddd; padding: 5px;}
+</style>
+</head>
+<body onLoad="document.Login.UserName.focus()" background="../images/login.png">
+<form name="Login" action="/checklogin" method="post" target="_parent" onSubmit="return CheckForm();">
+    <table width="1003" border="0" align="center" cellpadding="5" cellspacing="0">
+	<tr><td colspan="2" style="height:200px;" ></td></tr>
+      <tr> 
+        <td colspan="2" valign="middle" align="center" style="height:35px; font-size:18px; color:#000000;"> <strong>Blog管理登录</strong></td>
+      </tr>
+    <tr> 
+      <td height="120" colspan="2" style="text-align:right;">
+        <table width="300" border="0" cellspacing="8" cellpadding="0" align="center">
+          <tr> 
+            <td align="right" style="color:#000000">用户名称：</td>
+            <td><input name="UserName"  type="text"  id="UserName2" style="width:150px; height:20px;"></td>
+          </tr>
+          <tr> 
+            <td align="right" style="color:#000000">用户密码：</td>
+            <td><input name="Password"  type="password"  style="width:150px; height:20px;"></td>
+          </tr>
+          <tr> 
+            <td colspan="2"> <div align="center"> 
+                <input   type="submit" name="Submit"  value=" 确 认 ">
+                &nbsp; 
+                <input name="reset" type="reset"  id="reset" value=" 清 除 ">
+                <br>
+              </div></td>
+          </tr>
+        </table>
+      </td>
+      </tr>
+    </table>
+</form>
+</body>
+</html>
