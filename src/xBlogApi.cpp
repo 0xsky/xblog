@@ -27,7 +27,7 @@ void xBlog::SetRouteTable(evhttp * http)
 
     // 管理后台功能
     evhttp_set_cb(http, "/admin", xBlog::AdminCallback, this);                     // 
-    evhttp_set_cb(http, "/checklogin", xBlog::AdminCheckLoginCallback, this);      // 
+    //evhttp_set_cb(http, "/checklogin", xBlog::AdminCheckLoginCallback, this);      // 
     evhttp_set_cb(http, "/admin_post", xBlog::AdminPostManager_Callback, this);    // 
     evhttp_set_cb(http, "/admin_links", xBlog::AdminLinks_Callback, this);         // 
     evhttp_set_cb(http, "/admin_config", xBlog::AdminSiteConfig_Callback, this);   // 

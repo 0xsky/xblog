@@ -139,7 +139,6 @@ const char *xBlog::GuessContentType(const char *path)
 
 bool xBlog::checkauth(const char *auth)
 {
-    unsigned char user_key[128] = { 0 };
     char *p = strstr(auth, "Basic ") ;
     p += strlen("Basic ");
     //log_debug("xBlog::checkauth  %s \r\n", p);
@@ -476,8 +475,8 @@ bool xBlog::LoadConfig(BLOGCONFIG &cfg)
 
     unsigned long  in_len = strKey.length();
     unsigned long  out_len = sizeof(user_key);
-    int ret = base64_encode((unsigned char*)strKey.c_str(), in_len, user_key, &out_len);
-    cfg.auth = user_key;
+    base64_encode((unsigned char*)strKey.c_str(), in_len, user_key, &out_len);
+    cfg.auth.assign((char*)user_key,out_len);
 
     return true;
 }
@@ -606,7 +605,7 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
             goto err;
         }
 
-        const char *type = GuessContentType(decoded_path);
+        const char *type = xBlog::GuessContentType(decoded_path);
 
         evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", type);
         //evb = evbuffer_new ();

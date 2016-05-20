@@ -47,7 +47,7 @@ public:
 
     bool checksession(struct evhttp_request *req);
     bool checkauth(const char *auth);
-    const char *GuessContentType(const char *path);
+    static const char *GuessContentType(const char *path);
     static int base64_encode(const unsigned char *in, unsigned long inlen, unsigned char *out, unsigned long *outlen);
     static void HttpDebug(struct evhttp_request *req);
     static void DebugHttpHeader(struct evhttp_request *req);
