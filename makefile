@@ -1,7 +1,7 @@
 ######################################################################
 #                         Makefile                                   #
 ######################################################################
-CC          := ccache g++
+CC          := g++
 SRC_DIR     := ./src/xBlogMain.cpp  ./src/xBlog.cpp ./src/xConfig.cpp ./src/xBlogApi.cpp
 SRC_DIR     += ./src/common/jsoncpp.cpp ./src/common/xIniFile.cpp ./src/common/xLog.cpp ./src/MultipartParase.cpp 
 SRC_DIR     += ./src/common/xMysqlPool.cpp ./src/common/xUntil.cpp ./src/common/multipart_parser.cpp
@@ -21,7 +21,7 @@ LD_LIBS     := rt pthread
 AR_LIBS     := event
 STATIC_LIBS := -Wl,-Bstatic $(addprefix -l,$(AR_LIBS)) -Wl,-Bdynamic
 
-APP_NAME    := xweb
+APP_NAME    := xblog
 APP_SUFFIX  := 
 APP_TARGET  := $(APP_NAME)$(APP_SUFFIX)
 
@@ -42,22 +42,7 @@ $(APP_TARGET): $(OBJ_FILES)
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-install:
-	@echo install...
-	cp $(APP_NAME) /home/xsky/$(APP_NAME)
-	@scp $(APP_NAME) tongtong@221.228.215.38:/data/immserver/pushserver/test
-
-yun:
-	@echo install...
-	@ssh xsky@121.42.10.151 'cd /home/xsky/xdb/ &&./xapp.sh stop'
-	@scp $(APP_NAME) xsky@121.42.10.151:/home/xsky/xdb
-	@ssh xsky@121.42.10.151 'cd /home/xsky/xdb/ &&./xapp.sh start'
-
 clean:
 	@echo clean...
 	@rm -rf $(OBJ_FILES)
-	@rm -rf *.orig
-
-    
-    
 
