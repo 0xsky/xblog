@@ -284,8 +284,9 @@ void xBlog::SendHttpResphone(struct evhttp_request *req, int code, const string 
     }
 
     evhttp_add_header(evhttp_request_get_output_headers(req), "Server", SERVER_SIGNATURE);
-    int ret = evbuffer_add_printf(buf, "%s", strData.c_str());
-    log_debug("evbuffer_add_printf ret= %d length=%d \r\n", ret, strData.length());
+    //int ret = 
+    evbuffer_add_printf(buf, "%s", strData.c_str());
+    //log_debug("evbuffer_add_printf ret= %d length=%d \r\n", ret, strData.length());
 
     evhttp_send_reply(req, code, "OK", buf);
     evbuffer_free(buf);
@@ -476,7 +477,7 @@ void xBlog::SendDocument(struct evhttp_request *req, const char* file)
     char whole_path[1024] = { 0 };
     struct stat st;
 
-    printf("xBlog::SendDocument a GET request for <%s>\n", file);
+    log_debug("xBlog::SendDocument GET request for <%s>\n", file);
 
     decoded_path = file;
     if (decoded_path == NULL) {
@@ -488,7 +489,6 @@ void xBlog::SendDocument(struct evhttp_request *req, const char* file)
     if (strstr(decoded_path, "..")) {
         return;
     }
-    
 
     evutil_snprintf(whole_path, sizeof(whole_path), "%s%s", szDir, decoded_path);
     if (stat(whole_path, &st) < 0) {
@@ -496,7 +496,6 @@ void xBlog::SendDocument(struct evhttp_request *req, const char* file)
         SendErrorResphone(req, HTTP_NOTFOUND, "stat error whole_path %s \r\n", whole_path);
         return;
     }
-    log_debug("whole_path %s \r\n", whole_path);
 
     struct evbuffer *evb = evbuffer_new();
     if (!S_ISDIR(st.st_mode)) {
@@ -507,16 +506,15 @@ void xBlog::SendDocument(struct evhttp_request *req, const char* file)
 #endif
             //if ((fd = open(whole_path, O_RDONLY)) < 0)
         {
-            printf("open");
+            log_error("open");
             return;
         }
 
         if (fstat(fd, &st) < 0) {
             //close(fd);
-            printf("fstat");
+            log_error("fstat");
             return;
         }
-        printf("fd: %d len:%zd\r\n", fd, (size_t)st.st_size);
 
         const char *type = GuessContentType(decoded_path);
         evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", type);
@@ -544,10 +542,9 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
         return;
     }
 
-    log_info("xBlog::SendDocumentCallback a GET request for <%s>\n", uri);
+    log_info("xBlog::SendDocumentCallback GET request for <%s>\n", uri);
 
     decoded_path = evhttp_uridecode(uri, 0, NULL);
-
     if (decoded_path == NULL) {
         log_error("SendDocumentCallback decoded_path %s \r\n", decoded_path);
         goto err;
@@ -571,8 +568,8 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
         log_error("stat error whole_path %s \r\n", whole_path);
         goto err;
     }
-    log_info("whole_path %s \r\n", whole_path);
-    log_info("decoded_path: %s \r\n", decoded_path);
+    //log_info("whole_path %s \r\n", whole_path);
+    //log_info("decoded_path: %s \r\n", decoded_path);
 
     evb = evbuffer_new();
     if (!S_ISDIR(st.st_mode)) {
@@ -592,9 +589,7 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
         }
 
         const char *type = xBlog::GuessContentType(decoded_path);
-
         evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", type);
-        //evb = evbuffer_new ();
         evbuffer_add_file(evb, fd, 0, (size_t)st.st_size);
     } else {
         /* If it's a directory, read the comments and make a little index page */

@@ -9,7 +9,7 @@
 #ifndef _MYSQL_POOL_H_
 #define _MYSQL_POOL_H_
 
-const int MAX_CONNECTION_NUM = 128;
+static const int MAX_CONNECTION_NUM = 128;
 
 #ifdef	WIN32
 typedef	unsigned int SOCKET;
@@ -41,7 +41,7 @@ public:
 public:    
     MYSQL_RES *select(const char *sql);
     bool execute(const char *sql);
-    bool select_json(const char *sql, string &result);
+    bool select_json(const std::string &strSQL, string &result);
 
     void free_res(MYSQL_RES *res);
     unsigned int get_field_num(MYSQL_RES *res);

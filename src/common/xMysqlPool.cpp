@@ -136,7 +136,6 @@ MYSQL_RES *MysqlPool::select(const char *sql)
     }
     
     free_connection(mysql);
-
     return res;
 }
 
@@ -183,7 +182,7 @@ void MysqlPool::escape_string(const string &strin, string &out)
     free(szbuf);
 }
 
-bool MysqlPool::select_json(const char *sql, string & result)
+bool MysqlPool::select_json(const std::string &strSQL, string & result)
 {
     bool bRet = false;
     Json::Value root;
@@ -193,28 +192,24 @@ bool MysqlPool::select_json(const char *sql, string & result)
         return false;
     }
     
-    log_debug("MysqlPool::select_json2 SQL:%s \r\n", sql);
-    if (mysql_real_query(mysql, sql, strlen(sql))) {
-        log_error("MysqlPool::select_json2 mysql_error:%s\n", mysql_error(mysql));
+    log_debug("MysqlPool::select_json SQL:%s \r\n", strSQL.c_str());
+    if (mysql_real_query(mysql, strSQL.c_str(), strSQL.length())) {
+        log_error("MysqlPool::select_json mysql_error:%s\n", mysql_error(mysql));
         goto end;
     } else {
         MYSQL_RES *pRes = mysql_store_result(mysql);
         if (pRes) {
             MYSQL_FIELD *field;
             Json::Value fieldlist;
-            my_ulonglong n = mysql_num_rows(pRes);
+            //my_ulonglong n = mysql_num_rows(pRes);
             int num_fields = mysql_num_fields(pRes);
             map < int,string > fieldsMap;
-
-            log_debug("MysqlPool::select_json2 fields=%d result: %d \r\n", num_fields, n);
 
             for (int i = 0; i < num_fields; i++) {
                 field = mysql_fetch_field_direct(pRes, i);
                 fieldsMap[i] = field->name;
-                //log_debug("%s\t", field->name);
                 fieldlist.append(field->name);
             }
-            log_debug("MysqlPool::select_json2 \r\n");
 
             MYSQL_ROW row = mysql_fetch_row(pRes);
             while (row) {
@@ -233,16 +228,14 @@ bool MysqlPool::select_json(const char *sql, string & result)
             mysql_free_result(pRes);
             bRet = true;
         } else {
-            log_debug("MysqlPool::select_json2 MYSQL_RES %s \r\n", mysql_error(mysql));
+            log_error("MysqlPool::select_json MYSQL_RES %s \r\n", mysql_error(mysql));
         }
     }
 
   end:
-    log_debug("MysqlPool::select_json2 affected=%lld \r\n", mysql_affected_rows(mysql));
     Json::FastWriter writer;
     result += writer.write(root);
     free_connection(mysql);
 
-    //result += ")";
     return bRet;
 }
