@@ -9,6 +9,7 @@
 #ifndef _xBlog_H_
 #define _xBlog_H_
 
+#include "xUntil.h"
 #include "xMysqlPool.h"
 #include "xLog.h"
 #include <sstream>
@@ -17,6 +18,7 @@
 #include <event2/buffer.h>
 #include <event2/util.h>
 #include <event2/keyvalq_struct.h>
+
 
 template<class T>
 string tostring(const T& t)

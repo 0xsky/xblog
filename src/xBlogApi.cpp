@@ -25,9 +25,7 @@ void xBlog::SetRouteTable(evhttp * http)
     evhttp_set_cb(http, "/catalog",      xBlog::CatalogRequestCallback, this);  //
     evhttp_set_cb(http, "/infogape", xBlog::InfopageRequestCallback, this);     //
 
-    // 管理后台功能
     evhttp_set_cb(http, "/admin", xBlog::AdminCallback, this);                     //
-    //evhttp_set_cb(http, "/checklogin", xBlog::AdminCheckLoginCallback, this);      //
     evhttp_set_cb(http, "/admin_post", xBlog::AdminPostManager_Callback, this);    //
     evhttp_set_cb(http, "/admin_links", xBlog::AdminLinks_Callback, this);         //
     evhttp_set_cb(http, "/admin_config", xBlog::AdminSiteConfig_Callback, this);   //
@@ -87,18 +85,13 @@ void xBlog::CatalogRequestCallback(struct evhttp_request *req, void *arg)
     xBlog::HttpDebug(req);
     struct evkeyvalq uri_arg;
     xBlog::HttpParseURL(req, &uri_arg);
-    const char *arg_cate = xBlog::GetVal(&uri_arg, "id");
+    const char *arg_id = xBlog::GetVal(&uri_arg, "id");
 
-    int cateid = 0;
-    if (NULL != arg_cate) {
-        cateid = atoi(arg_cate);
-    } else {
-        cateid = 0;
-    }
+    int catalog_id = (NULL == arg_id) ? 0 : (atoi(arg_id));
 
     std::string strData;
     std::string strSQL = "SELECT * FROM xb_posts WHERE post_status = 'publish' AND post_classify = ";
-    strSQL += tostring(cateid);
+    strSQL += tostring(catalog_id);
     bool bRet = pthis->mysqlclient->select_json(strSQL.c_str(), strData);
     if (bRet) {
         xBlog::SendHttpJsonResphone(req, HTTP_OK, strData);
@@ -109,16 +102,6 @@ void xBlog::InfopageRequestCallback(struct evhttp_request *req, void *arg)
 {
     xBlog *pthis = (xBlog*)arg;
     xBlog::HttpDebug(req);
-    struct evkeyvalq uri_arg;
-    xBlog::HttpParseURL(req, &uri_arg);
-    const char *arg_cate = xBlog::GetVal(&uri_arg, "id");
-
-    int cateid = 0;
-    if (NULL != arg_cate) {
-        cateid = atoi(arg_cate);
-    } else {
-        cateid = 0;
-    }
 
     std::string strData;
     std::string strSQL = "SELECT page_id, page_title, post_id FROM xb_page";
@@ -545,7 +528,6 @@ void xBlog::AdminCatalog_Callback(struct evhttp_request *req, void *arg)
     xBlog::SendHttpResphone(req, HTTP_OK, strHtml);
 }
 
-// https://www.google.com/?gws_rd=ssl#q=libevent+evhttp+upload
 void xBlog::UEControllerCallback(struct evhttp_request *req, void *arg)
 {
     xBlog::HttpDebug(req);
