@@ -195,6 +195,10 @@ bool MysqlPool::select_json(const std::string &strSQL, string & result)
     log_debug("MysqlPool::select_json SQL:%s \r\n", strSQL.c_str());
     if (mysql_real_query(mysql, strSQL.c_str(), strSQL.length())) {
         log_error("MysqlPool::select_json mysql_error:%s\n", mysql_error(mysql));
+        MYSQL_RES *pRes = mysql_store_result(mysql);
+        if (pRes) {
+            mysql_free_result(pRes);
+        }
         goto end;
     } else {
         MYSQL_RES *pRes = mysql_store_result(mysql);
@@ -233,6 +237,7 @@ bool MysqlPool::select_json(const std::string &strSQL, string & result)
     }
 
   end:
+
     Json::FastWriter writer;
     result += writer.write(root);
     free_connection(mysql);

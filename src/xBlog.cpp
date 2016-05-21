@@ -227,7 +227,7 @@ void xBlog::GetHttpPostData(struct evhttp_request *req, struct evkeyvalq *evdata
 
     char *pbuffer = (char *) malloc(data_len + 1);
     memset(pbuffer, 0, data_len + 1);
-    log_debug("data_len: %d\r\n", data_len);
+    //log_debug("data_len: %d\r\n", data_len);
     evbuffer_copyout(pevBuf, pbuffer, data_len);
     log_debug("%s\r\n", pbuffer);
     evhttp_parse_query_str(pbuffer, evdata);
