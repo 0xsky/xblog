@@ -5,17 +5,22 @@
 * Distributed under GPL license.
 * ----------------------------------------------------------------------------
 */
- 
+
 
 #include "xBlog.h"
 #include "xConfig.h"
 #include <assert.h>
 
+#include <time.h>
+
 #ifdef WIN32
+
 #else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <signal.h>
+#include <dirent.h>
 #endif
 
 
@@ -41,8 +46,8 @@ bool xBlog::Init()
 {
     StartTime = (uint32_t)time(NULL);
 
-    strncpy(szDir, Config::GetInstance()->strRootFullPath.c_str(), 
-                Config::GetInstance()->strRootFullPath.length());
+    strncpy(szDir, Config::GetInstance()->strRootFullPath.c_str(),
+            Config::GetInstance()->strRootFullPath.length());
 
     StartMysqlPool();
 
@@ -102,22 +107,22 @@ const char *xBlog::GuessContentType(const char *path)
         const char *extension;
         const char *content_type;
     } content_type_table[] = {
-            { "txt", "text/plain" },
-            { "c", "text/plain" },
-            { "h", "text/plain" },
-            { "js", "application/x-javascript" },
-            { "html", "text/html" },
-            { "htm", "text/html" },
-            { "css", "text/css" },
-            { "gif", "image/gif" },
-            { "jpg", "image/jpeg" },
-            { "ico", "image/gif" },
-            { "jpeg", "image/jpeg" },
-            { "png", "image/png" },
-            { "pdf", "application/pdf" },
-            { "ps", "application/postsript" },
-            { "swf", "application/x-shockwave-flash" },
-            { NULL, NULL },
+        { "txt", "text/plain" },
+        { "c", "text/plain" },
+        { "h", "text/plain" },
+        { "js", "application/x-javascript" },
+        { "html", "text/html" },
+        { "htm", "text/html" },
+        { "css", "text/css" },
+        { "gif", "image/gif" },
+        { "jpg", "image/jpeg" },
+        { "ico", "image/gif" },
+        { "jpeg", "image/jpeg" },
+        { "png", "image/png" },
+        { "pdf", "application/pdf" },
+        { "ps", "application/postsript" },
+        { "swf", "application/x-shockwave-flash" },
+        { NULL, NULL },
     };
     const char *last_period, *extension;
     const struct table_entry *ent;
@@ -125,8 +130,7 @@ const char *xBlog::GuessContentType(const char *path)
     last_period = strrchr(path, '.');
     if (!last_period || strchr(last_period, '/')) {
 
-    }
-    else {
+    } else {
         extension = last_period + 1;
         for (ent = &content_type_table[0]; ent->extension; ++ent) {
             if (!stricmp(ent->extension, extension)) {
@@ -139,11 +143,10 @@ const char *xBlog::GuessContentType(const char *path)
 
 bool xBlog::checkauth(const char *auth)
 {
-    char *p = strstr(auth, "Basic ") ;
+    char *p = (char*)strstr(auth, "Basic ");
     p += strlen("Basic ");
-    //log_debug("xBlog::checkauth  %s \r\n", p);
 
-    return (0==strcmp(p, blogconfig.auth.c_str()));
+    return (0 == strcmp(p, blogconfig.auth.c_str()));
 }
 
 bool xBlog::checksession(struct evhttp_request *req)
@@ -163,9 +166,9 @@ bool xBlog::checksession(struct evhttp_request *req)
 void xBlog::HttpDebug(struct evhttp_request *req)
 {
 #ifdef _WIN32
-    if ("DEBUG"==Config::GetInstance()->xBlogAppConfig.LogLevel)
+    if ("DEBUG" == Config::GetInstance()->xBlogAppConfig.LogLevel)
 #else
-        if (LOG_LEVEL_DEBUG==LOGGER._level)
+    if (LOG_LEVEL_DEBUG == LOGGER._level)
 #endif
     {
         xBlog::DebugHttpGetCommand(req);
@@ -217,7 +220,8 @@ void xBlog::HttpParseURL(struct evhttp_request *req, struct evkeyvalq *evMyheade
     evhttp_parse_query_str(xBlog_query, evMyheader);
 }
 
-void xBlog::GetHttpPostData(struct evhttp_request *req, struct evkeyvalq *evdata){
+void xBlog::GetHttpPostData(struct evhttp_request *req, struct evkeyvalq *evdata)
+{
     evbuffer *pevBuf = evhttp_request_get_input_buffer(req);
     int data_len = evbuffer_get_length(pevBuf);
 
@@ -230,21 +234,22 @@ void xBlog::GetHttpPostData(struct evhttp_request *req, struct evkeyvalq *evdata
     free(pbuffer);
 }
 
-char* xBlog::GetHttpPostData(struct evhttp_request *req) {
-    evbuffer *pevBuf = evhttp_request_get_input_buffer(req);
-    int data_len = evbuffer_get_length(pevBuf);
+char* xBlog::GetHttpPostData(struct evhttp_request *req)
+{
+    evbuffer *input_buf = evhttp_request_get_input_buffer(req);
+    int data_len = evbuffer_get_length(input_buf);
     log_debug("GetHttpPostData data_len: %d\r\n", data_len);
 
-    char *pbuffer = (char *)malloc(data_len);
-    memset(pbuffer, 0, data_len);
-    evbuffer_copyout(pevBuf, pbuffer, data_len);
-    return pbuffer;
+    char *data_buffer = (char *)malloc(data_len);
+    memset(data_buffer, 0, data_len);
+    evbuffer_copyout(input_buf, data_buffer, data_len);
+    return data_buffer;
 }
 
 const char *xBlog::GetVal(struct evkeyvalq *evdata, const char *key)
 {
     const char *pVal = evhttp_find_header(evdata, key);
-    if (NULL==pVal) {
+    if (NULL == pVal) {
         return "";
     }
 
@@ -263,28 +268,17 @@ void xBlog::SendErrorResphone(struct evhttp_request *req, int errcode, const cha
     evhttp_send_error(req, errcode, szBuf);
 }
 
-
-void xBlog::SendHttpJsonResphone(struct evhttp_request *req, int code, const string & strData){
-    struct evbuffer *buf = evbuffer_new();
-    if (NULL == buf) {
-        log_error("failed to create response buffer\r\n");
-        return;
-    }
-
-    evhttp_add_header(evhttp_request_get_output_headers(req), "Server", SERVER_SIGNATURE);
+void xBlog::SendHttpJsonResphone(struct evhttp_request *req, int code, const string & strData)
+{
     evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "text/json; charset=utf-8");
-
-    int ret = evbuffer_add_printf(buf, "%s", strData.c_str());
-    log_debug("evbuffer_add_printf ret= %d length=%d \r\n", ret, strData.length());
-
-    evhttp_send_reply(req, code, "OK", buf);
-    evbuffer_free(buf);
+    SendHttpResphone(req, code, strData);
 }
 
-void xBlog::SendHttpResphone(struct evhttp_request *req, int code, const string & strData){
+void xBlog::SendHttpResphone(struct evhttp_request *req, int code, const string & strData)
+{
     struct evbuffer *buf = evbuffer_new();
 
-    if (NULL==buf) {
+    if (NULL == buf) {
         log_error("failed to create response buffer\r\n");
         return;
     }
@@ -354,8 +348,7 @@ bool xBlog::Run(const char *ip, int port, int timeout_secs, int nthreads)
     int ret = -1;
     int skt = BindSocket(ip, port);
 
-    if (skt < 0)
-    {
+    if (skt < 0) {
         log_error("BindSocket %s %d error\r\n", ip, port);
         return false;
     }
@@ -364,23 +357,19 @@ bool xBlog::Run(const char *ip, int port, int timeout_secs, int nthreads)
 
     HANDLE ths[128];
 
-    for (int i = 0; i < nthreads; i++)
-    {
+    for (int i = 0; i < nthreads; i++) {
         struct event_base *base = event_base_new();
-        if (base == NULL)
-        {
+        if (base == NULL) {
             return false;
         }
 
         struct evhttp *httpd = evhttp_new(base);
-        if (httpd == NULL)
-        {
+        if (httpd == NULL) {
             return false;
         }
 
         ret = evhttp_accept_socket(httpd, skt);
-        if (ret != 0)
-        {
+        if (ret != 0) {
             return false;
         }
 
@@ -427,8 +416,9 @@ bool xBlog::Run(const char *ip, int port, int timeout_secs, int nthreads)
     return true;
 }
 
-void *xBlog::Dispatch(void *arg){
-    if (NULL==arg) {
+void *xBlog::Dispatch(void *arg)
+{
+    if (NULL == arg) {
         log_error("error arg is null\n");
         return NULL;
     }
@@ -440,11 +430,11 @@ void xBlog::StartMysqlPool()
 {
     mysqlclient = new MysqlPool;
     mysqlclient->init(Config::GetInstance()->xBlogMysqlcfg.ipaddr.c_str(),
-                                               Config::GetInstance()->xBlogMysqlcfg.username.c_str(),
-                                               Config::GetInstance()->xBlogMysqlcfg.passwd.c_str(),
-                                               Config::GetInstance()->xBlogMysqlcfg.dbname.c_str());
+                      Config::GetInstance()->xBlogMysqlcfg.username.c_str(),
+                      Config::GetInstance()->xBlogMysqlcfg.passwd.c_str(),
+                      Config::GetInstance()->xBlogMysqlcfg.dbname.c_str());
     mysqlclient->create_pool(Config::GetInstance()->xBlogMysqlcfg.poolsize);
-    
+
 }
 
 bool xBlog::LoadConfig(BLOGCONFIG &cfg)
@@ -453,9 +443,7 @@ bool xBlog::LoadConfig(BLOGCONFIG &cfg)
     strSQL << "SELECT theme, username, password from xb_profile;";
     MYSQL_RES *pRes = mysqlclient->select(strSQL.str().c_str());
 
-    log_debug("%s \r\n", strSQL.str().c_str());
-
-    if (NULL==pRes) {
+    if (NULL == pRes) {
         return false;
     }
     MYSQL_ROW row;
@@ -464,7 +452,7 @@ bool xBlog::LoadConfig(BLOGCONFIG &cfg)
     cfg.user = row[1];
     cfg.pass = row[2];
     mysqlclient->free_res(pRes);
-    
+
     log_debug("theme:%s ", cfg.theme.c_str());
 
     unsigned char user_key[128] = { 0 };
@@ -476,7 +464,7 @@ bool xBlog::LoadConfig(BLOGCONFIG &cfg)
     unsigned long  in_len = strKey.length();
     unsigned long  out_len = sizeof(user_key);
     base64_encode((unsigned char*)strKey.c_str(), in_len, user_key, &out_len);
-    cfg.auth.assign((char*)user_key,out_len);
+    cfg.auth.assign((char*)user_key, out_len);
 
     return true;
 }
@@ -488,7 +476,7 @@ void xBlog::SendDocument(struct evhttp_request *req, const char* file)
     char whole_path[1024] = { 0 };
     struct stat st;
 
-    printf("xHttpd::SendDocument a GET request for <%s>\n", file);
+    printf("xBlog::SendDocument a GET request for <%s>\n", file);
 
     decoded_path = file;
     if (decoded_path == NULL) {
@@ -497,8 +485,10 @@ void xBlog::SendDocument(struct evhttp_request *req, const char* file)
         return;
     }
 
-    if (strstr(decoded_path, ".."))
+    if (strstr(decoded_path, "..")) {
         return;
+    }
+    
 
     evutil_snprintf(whole_path, sizeof(whole_path), "%s%s", szDir, decoded_path);
     if (stat(whole_path, &st) < 0) {
@@ -515,7 +505,7 @@ void xBlog::SendDocument(struct evhttp_request *req, const char* file)
 #else
         if ((fd = open(whole_path, O_RDONLY)) < 0)
 #endif
-        //if ((fd = open(whole_path, O_RDONLY)) < 0) 
+            //if ((fd = open(whole_path, O_RDONLY)) < 0)
         {
             printf("open");
             return;
@@ -554,7 +544,7 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
         return;
     }
 
-    log_info("xHttpd::SendDocumentCallback a GET request for <%s>\n", uri);
+    log_info("xBlog::SendDocumentCallback a GET request for <%s>\n", uri);
 
     decoded_path = evhttp_uridecode(uri, 0, NULL);
 
@@ -566,20 +556,18 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
     if (strstr(decoded_path, ".."))
         goto err;
 
-    if (strstr(decoded_path, "/admin/")&&!pHttpd->checksession(req)) {
+    if (strstr(decoded_path, "/admin/") && !pHttpd->checksession(req)) {
         return;
     }
 
     len = strlen(decoded_path) + strlen(pHttpd->szDir) + 2;
-    if (!(whole_path = (char *)malloc(len)))
-    {
+    if (!(whole_path = (char *)malloc(len))) {
         log_error("malloc");
         goto err;
     }
 
     evutil_snprintf(whole_path, len, "%s%s",  pHttpd->szDir, decoded_path);
-    if (stat(whole_path, &st) < 0)
-    {
+    if (stat(whole_path, &st) < 0) {
         log_error("stat error whole_path %s \r\n", whole_path);
         goto err;
     }
@@ -587,8 +575,7 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
     log_info("decoded_path: %s \r\n", decoded_path);
 
     evb = evbuffer_new();
-    if (!S_ISDIR(st.st_mode))
-    {
+    if (!S_ISDIR(st.st_mode)) {
 #ifdef WIN32
         if ((fd = open(whole_path, O_RDONLY | O_BINARY)) < 0)
 #else
@@ -599,8 +586,7 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
             goto err;
         }
 
-        if (fstat(fd, &st) < 0)
-        {
+        if (fstat(fd, &st) < 0) {
             log_error("fstat");
             goto err;
         }
@@ -610,9 +596,7 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
         evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", type);
         //evb = evbuffer_new ();
         evbuffer_add_file(evb, fd, 0, (size_t)st.st_size);
-    }
-    else
-    {
+    } else {
         /* If it's a directory, read the comments and make a little index page */
 #ifdef WIN32
         HANDLE d;
@@ -642,14 +626,12 @@ void xBlog::SendDocumentCallback(struct evhttp_request *req, void *arg)
 #endif
 
         evbuffer_add_printf(evb, "<html>\n <head>\n" "  <title>%s</title>\n" "  <base href='%s%s'>\n" " </head>\n" " <body>\n" "  <h1>%s</h1><hr>\n" "  <ul>\n", decoded_path,    /* XXX html-escape this. */
-            decoded_path, trailing_slash, decoded_path /* XXX html-escape this */);
+                            decoded_path, trailing_slash, decoded_path /* XXX html-escape this */);
 #ifdef WIN32
-        do
-        {
+        do {
             const char *name = ent.cFileName;
 #else
-        while ((ent = readdir(d)))
-        {
+        while ((ent = readdir(d))) {
             const char *name = ent->d_name;
 #endif
             if (0 != stricmp(name, "."))

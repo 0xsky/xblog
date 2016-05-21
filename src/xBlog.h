@@ -5,7 +5,7 @@
  * Distributed under GPL license.
  * ----------------------------------------------------------------------------
  */
- 
+
 #ifndef _xBlog_H_
 #define _xBlog_H_
 
@@ -19,7 +19,8 @@
 #include <event2/keyvalq_struct.h>
 
 template<class T>
-string tostring(const T& t) {
+string tostring(const T& t)
+{
     ostringstream oss;
     oss << t;
     return  oss.str();
@@ -28,15 +29,15 @@ string tostring(const T& t) {
 #define SERVER_SIGNATURE "xBlog Server 0.1"
 
 
-typedef struct _XBLOGCONFIG_
-{
+typedef struct _XBLOGCONFIG_ {
     string theme;
     string user;
     string pass;
     string auth;
 } BLOGCONFIG, *PBLOGCONFIG;
 
-class xBlog{
+class xBlog
+{
 public:
     xBlog();
     ~xBlog();
@@ -61,7 +62,7 @@ public:
     static void SendErrorResphone(struct evhttp_request *req, int errcode, const char*fmt, ...);
     static void SendDocumentCallback(struct evhttp_request *req, void *arg);
     void SendDocument(struct evhttp_request *req, const char* file);
-    
+
 
     bool StartHttpd();
     void SetRouteTable(evhttp * http);
@@ -69,7 +70,8 @@ public:
     bool Run(const char *ip, int port, int timeout_secs, int nthreads);
     static void *Dispatch(void *arg);
     static void OnTimer();
-    event_base *GetEventBase() {
+    event_base *GetEventBase()
+    {
         return base;
     };
 
@@ -97,10 +99,8 @@ private:
     bool LoadConfig(BLOGCONFIG &cfg);
 
 public:
-    uint64_t LoginToken;
     char     szDir[1024];
     uint32_t StartTime;
-    char     uri_root[1024];
 
 private:
     struct event_base *base;

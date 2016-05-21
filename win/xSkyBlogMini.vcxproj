@@ -17,7 +17,6 @@
     <ClCompile Include="..\src\common\xIniFile.cpp" />
     <ClCompile Include="..\src\common\xLog.cpp" />
     <ClCompile Include="..\src\common\xMysqlPool.cpp" />
-    <ClCompile Include="..\src\common\xUntil.cpp" />
     <ClCompile Include="..\src\xBlog.cpp" />
     <ClCompile Include="..\src\xBlogApi.cpp" />
     <ClCompile Include="..\src\xBlogMain.cpp" />

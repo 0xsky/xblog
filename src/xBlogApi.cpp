@@ -12,28 +12,28 @@
 
 void xBlog::SetRouteTable(evhttp * http)
 {
-    evhttp_set_cb(http, "/", xBlog::IndexRequestCallback, this);                // 
-    evhttp_set_cb(http, "/index.htm", xBlog::IndexRequestCallback, this);       // 
-    evhttp_set_cb(http, "/index.html", xBlog::IndexRequestCallback, this);      // 
-    evhttp_set_cb(http, "/postlist", xBlog::PostlistRequestCallback, this);     // 
-    evhttp_set_cb(http, "/post", xBlog::PostRequestCallback, this);             // 
-    evhttp_set_cb(http, "/classify", xBlog::ClassifyRequestCallback, this);     // 
-    evhttp_set_cb(http, "/links", xBlog::LinksRequestCallback, this);           // 
-    evhttp_set_cb(http, "/config", xBlog::ConfigCallback, this);                // 
-    evhttp_set_cb(http, "/postview", xBlog::PostviewCallback, this);            // 
-    evhttp_set_cb(http, "/paging",  xBlog::PagingCallback, this);               // 
-    evhttp_set_cb(http, "/catalog",      xBlog::CatalogRequestCallback, this);  // 
-    evhttp_set_cb(http, "/infogape", xBlog::InfopageRequestCallback, this);     // 
+    evhttp_set_cb(http, "/", xBlog::IndexRequestCallback, this);                //
+    evhttp_set_cb(http, "/index.htm", xBlog::IndexRequestCallback, this);       //
+    evhttp_set_cb(http, "/index.html", xBlog::IndexRequestCallback, this);      //
+    evhttp_set_cb(http, "/postlist", xBlog::PostlistRequestCallback, this);     //
+    evhttp_set_cb(http, "/post", xBlog::PostRequestCallback, this);             //
+    evhttp_set_cb(http, "/classify", xBlog::ClassifyRequestCallback, this);     //
+    evhttp_set_cb(http, "/links", xBlog::LinksRequestCallback, this);           //
+    evhttp_set_cb(http, "/config", xBlog::ConfigCallback, this);                //
+    evhttp_set_cb(http, "/postview", xBlog::PostviewCallback, this);            //
+    evhttp_set_cb(http, "/paging",  xBlog::PagingCallback, this);               //
+    evhttp_set_cb(http, "/catalog",      xBlog::CatalogRequestCallback, this);  //
+    evhttp_set_cb(http, "/infogape", xBlog::InfopageRequestCallback, this);     //
 
     // 管理后台功能
-    evhttp_set_cb(http, "/admin", xBlog::AdminCallback, this);                     // 
-    //evhttp_set_cb(http, "/checklogin", xBlog::AdminCheckLoginCallback, this);      // 
-    evhttp_set_cb(http, "/admin_post", xBlog::AdminPostManager_Callback, this);    // 
-    evhttp_set_cb(http, "/admin_links", xBlog::AdminLinks_Callback, this);         // 
-    evhttp_set_cb(http, "/admin_config", xBlog::AdminSiteConfig_Callback, this);   // 
-    evhttp_set_cb(http, "/admin_catalog", xBlog::AdminCatalog_Callback, this);     // 
+    evhttp_set_cb(http, "/admin", xBlog::AdminCallback, this);                     //
+    //evhttp_set_cb(http, "/checklogin", xBlog::AdminCheckLoginCallback, this);      //
+    evhttp_set_cb(http, "/admin_post", xBlog::AdminPostManager_Callback, this);    //
+    evhttp_set_cb(http, "/admin_links", xBlog::AdminLinks_Callback, this);         //
+    evhttp_set_cb(http, "/admin_config", xBlog::AdminSiteConfig_Callback, this);   //
+    evhttp_set_cb(http, "/admin_catalog", xBlog::AdminCatalog_Callback, this);     //
 
-    evhttp_set_cb(http, "/ueditor1_4_3_2-src/uecontroller", xBlog::UEControllerCallback, this);  
+    evhttp_set_cb(http, "/ueditor1_4_3_2-src/uecontroller", xBlog::UEControllerCallback, this);
 
     evhttp_set_timeout(http, 5);
     evhttp_set_gencb(http, xBlog::SendDocumentCallback, this);
@@ -45,7 +45,7 @@ void xBlog::IndexRequestCallback(struct evhttp_request *req, void *arg)
     xBlog::HttpDebug(req);
     struct evkeyvalq uri_arg;
     xBlog::HttpParseURL(req, &uri_arg);
-    
+
     log_debug("theme %s", pthis->blogconfig.theme.c_str());
     string strpath = "/themes/";
     strpath += pthis->blogconfig.theme + "/index.htm";
@@ -61,15 +61,15 @@ void xBlog::PostlistRequestCallback(struct evhttp_request *req, void *arg)
     xBlog::HttpParseURL(req, &uri_arg);
     const char *arg_page = xBlog::GetVal(&uri_arg, "page");
 
-    int pageid = 0; 
+    int pageid = 0;
     if (NULL != arg_page) {
         pageid = atoi(arg_page);
-        pageid = (pageid<=0)?1:pageid;
+        pageid = (pageid <= 0) ? 1 : pageid;
     }
 
     int count = 10;
-    int index = (pageid-1)*count;
-    index = (index>0)?index:0;
+    int index = (pageid - 1) * count;
+    index = (index > 0) ? index : 0;
 
     string strData;
     std::string strSQL = "SELECT ID, post_author, post_date, post_classify, post_brief, post_title FROM xb_posts ";
@@ -139,12 +139,12 @@ void xBlog::PostRequestCallback(struct evhttp_request *req, void *arg)
 
     bool last = false;
     bool next = false;
-    int postid = 0; 
+    int postid = 0;
     if (NULL != arg_id) {
         postid = atoi(arg_id);
-        postid = (postid<=0)?1:postid;
+        postid = (postid <= 0) ? 1 : postid;
     }
-    if ((NULL != arg_pos) && (0==strcmp(arg_pos, "last"))) {
+    if ((NULL != arg_pos) && (0 == strcmp(arg_pos, "last"))) {
         last = true;
     }
     if ((NULL != arg_pos) && (0 == strcmp(arg_pos, "next"))) {
@@ -154,7 +154,7 @@ void xBlog::PostRequestCallback(struct evhttp_request *req, void *arg)
     std::string strData;
     std::string strSQL = "SELECT PT.ID, PT.post_author, PT.post_date, CY.classify_name, PT.post_content, PT.post_title ";
     strSQL += " FROM xb_posts AS PT  LEFT JOIN xb_classify AS CY ON PT.post_classify = CY.ID ";
-    if (!last&&!next) {
+    if (!last && !next) {
         strSQL += " WHERE PT.post_status = 'publish'  AND PT.ID = " + tostring(postid);
     } else if (last) {
         strSQL += " WHERE PT.post_status = 'publish'  AND PT.ID < " + tostring(postid) + " order by PT.ID DESC limit 1";
@@ -182,7 +182,7 @@ void xBlog::ClassifyRequestCallback(struct evhttp_request *req, void *arg)
     bool bRet = pthis->mysqlclient->select_json(strSQL.c_str(), strData);
     if (bRet) {
         xBlog::SendHttpJsonResphone(req, HTTP_OK, strData);
-    } 
+    }
 }
 
 void xBlog::LinksRequestCallback(struct evhttp_request *req, void *arg)
@@ -197,7 +197,7 @@ void xBlog::LinksRequestCallback(struct evhttp_request *req, void *arg)
     bool bRet = pthis->mysqlclient->select_json(strSQL.c_str(), strData);
     if (bRet) {
         xBlog::SendHttpJsonResphone(req, HTTP_OK, strData);
-    } 
+    }
 }
 
 void xBlog::ConfigCallback(struct evhttp_request *req, void *arg)
@@ -212,7 +212,7 @@ void xBlog::ConfigCallback(struct evhttp_request *req, void *arg)
     bool bRet = pthis->mysqlclient->select_json(strSQL.c_str(), strData);
     if (bRet) {
         xBlog::SendHttpJsonResphone(req, HTTP_OK, strData);
-    } 
+    }
 }
 
 void xBlog::PostviewCallback(struct evhttp_request *req, void *arg)
@@ -227,7 +227,7 @@ void xBlog::PostviewCallback(struct evhttp_request *req, void *arg)
     bool bRet = pthis->mysqlclient->select_json(strSQL.c_str(), strData);
     if (bRet) {
         xBlog::SendHttpJsonResphone(req, HTTP_OK, strData);
-    } 
+    }
 }
 
 void xBlog::PagingCallback(struct evhttp_request *req, void *arg)
@@ -285,7 +285,7 @@ void xBlog::AdminPostManager_Callback(struct evhttp_request *req, void *arg)
     if (0 == stricmp(pAction, "delete")) {
         const char *szPostId = xBlog::GetVal(&evPostData, "id");
         log_info("szPostId %s \r\n", szPostId);
-        if (NULL==szPostId) {
+        if (NULL == szPostId) {
             SendErrorResphone(req, HTTP_OK, "id error");
             return;
         }
@@ -295,7 +295,7 @@ void xBlog::AdminPostManager_Callback(struct evhttp_request *req, void *arg)
         msg = bRet ? ("success") : ("error");
     } else if (0 == stricmp(pAction, "revert")) {
         const char *szPostId = xBlog::GetVal(&evPostData, "id");
-            if (NULL == szPostId) {
+        if (NULL == szPostId) {
             SendErrorResphone(req, HTTP_OK, "id error");
             return;
         }
@@ -311,7 +311,7 @@ void xBlog::AdminPostManager_Callback(struct evhttp_request *req, void *arg)
     } else if (0 == stricmp(pAction, "edit")) {
         // 编辑文章
         const char *szPostId = xBlog::GetVal(&evURLdata, "id");
-        if (NULL==szPostId) {
+        if (NULL == szPostId) {
             SendErrorResphone(req, HTTP_OK, "id error");
             return;
         }
@@ -333,9 +333,9 @@ void xBlog::AdminPostManager_Callback(struct evhttp_request *req, void *arg)
         pBlog->mysqlclient->escape_string(brief, brief);
         stringstream ssSQL;
         ssSQL << "insert into xb_posts set post_date=now(), post_classify=" << classify
-            << ", post_title = '" << title << "'"
-            << ", post_content = '" << content << "'"
-            << ", post_brief = '" << brief << "'";
+              << ", post_title = '" << title << "'"
+              << ", post_content = '" << content << "'"
+              << ", post_brief = '" << brief << "'";
         bRet = pBlog->mysqlclient->execute(ssSQL.str().c_str());
         msg = bRet ? ("success") : ("error");
     } else if (0 == stricmp(pAction, "update_post")) {
@@ -352,13 +352,13 @@ void xBlog::AdminPostManager_Callback(struct evhttp_request *req, void *arg)
         pBlog->mysqlclient->escape_string(content, content);
         pBlog->mysqlclient->escape_string(brief, brief);
 
-            // ID, post_author, post_date, post_title, post_status, post_classify, post_content
+        // ID, post_author, post_date, post_title, post_status, post_classify, post_content
         stringstream ssSQL;
         ssSQL << "update xb_posts set post_classify=" << classify
-            << ", post_title = '" << title << "'"
-            << ", post_content = '" << content << "'"
-            << ", post_brief = '" << brief << "'"
-            << " where ID="<<id;
+              << ", post_title = '" << title << "'"
+              << ", post_content = '" << content << "'"
+              << ", post_brief = '" << brief << "'"
+              << " where ID=" << id;
         bRet = pBlog->mysqlclient->execute(ssSQL.str().c_str());
         msg = bRet ? ("success") : ("error");
     } else {
@@ -396,7 +396,7 @@ void xBlog::AdminLinks_Callback(struct evhttp_request *req, void *arg)
 
     if (0 == stricmp(pAction, "del")) {
         const char *szPostId = xBlog::GetVal(&evPostData, "id");
-        if (NULL==szPostId) {
+        if (NULL == szPostId) {
             SendErrorResphone(req, HTTP_OK, "error id");
             return;
         }
@@ -423,9 +423,9 @@ void xBlog::AdminLinks_Callback(struct evhttp_request *req, void *arg)
         pBlog->mysqlclient->escape_string(link_visible, link_visible);
         stringstream ssSQL;
         ssSQL << "insert into xb_links set link_url='" << link_url << "'"
-            << ", link_name = '" << link_name << "'"
-            << ", link_description = '" << link_description << "'"
-            << ", link_visible = '" << link_visible << "'";
+              << ", link_name = '" << link_name << "'"
+              << ", link_description = '" << link_description << "'"
+              << ", link_visible = '" << link_visible << "'";
         pBlog->mysqlclient->execute(ssSQL.str().c_str());
 
     } else if (0 == stricmp(pAction, "update")) {
@@ -441,10 +441,10 @@ void xBlog::AdminLinks_Callback(struct evhttp_request *req, void *arg)
         pBlog->mysqlclient->escape_string(link_visible, link_visible);
         stringstream ssSQL;
         ssSQL << "update xb_links set link_url='" << link_url << "'"
-            << " link_name = '" << link_name << "'"
-            << " link_description = '" << link_description << "'"
-            << " link_visible = '" << link_visible << "'"
-            << " where  link_id=" << link_id;
+              << " link_name = '" << link_name << "'"
+              << " link_description = '" << link_description << "'"
+              << " link_visible = '" << link_visible << "'"
+              << " where  link_id=" << link_id;
         pBlog->mysqlclient->execute(ssSQL.str().c_str());
     }
 
@@ -533,7 +533,7 @@ void xBlog::AdminCatalog_Callback(struct evhttp_request *req, void *arg)
         strHtml += szPostId;
 
     } else if (0 == stricmp(pAction, "add")) {
-       // const char *pTitle = xBlog::GetVal(&evPostData, "title");
+        // const char *pTitle = xBlog::GetVal(&evPostData, "title");
 
     } else if (0 == stricmp(pAction, "update")) {
         //const char *pID = xBlog::GetVal(&evPostData, "id");
@@ -563,7 +563,7 @@ void xBlog::UEControllerCallback(struct evhttp_request *req, void *arg)
 
 
     evhttp_cmd_type cmd_type = evhttp_request_get_command(req);
-    if (EVHTTP_REQ_GET ==cmd_type) {
+    if (EVHTTP_REQ_GET == cmd_type) {
         pBlog->SendDocument(req, "/config.json");
         return;
     }
@@ -629,7 +629,7 @@ void xBlog::UEControllerCallback(struct evhttp_request *req, void *arg)
     //        pEnd = strstr(pEnd + strlen("\r\n\r\n"), "\r\n");
     //        pEnd[0] = '\0';
     //        log_info("w: %s ", pParase);
-    //        
+    //
     //        pParase = pEnd + 2;
     //    }
     //
@@ -643,7 +643,7 @@ void xBlog::UEControllerCallback(struct evhttp_request *req, void *arg)
     //        if (pParase) {
     //            log_info("w: %s \r\n", pParase);
     //        }
-    //        
+    //
     //        std::string name;
     //        std::string val;
     //        xBlog::parase_form_data(pParase, name, val);

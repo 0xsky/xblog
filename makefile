@@ -4,7 +4,7 @@
 CC          := g++
 SRC_DIR     := ./src/xBlogMain.cpp  ./src/xBlog.cpp ./src/xConfig.cpp ./src/xBlogApi.cpp
 SRC_DIR     += ./src/common/jsoncpp.cpp ./src/common/xIniFile.cpp ./src/common/xLog.cpp ./src/MultipartParase.cpp 
-SRC_DIR     += ./src/common/xMysqlPool.cpp ./src/common/xUntil.cpp ./src/common/multipart_parser.cpp
+SRC_DIR     += ./src/common/xMysqlPool.cpp ./src/common/xUntil.cpp ./src/common/multipart_parser.cpp ./src/common/MultipartParase.cpp
 
 INC_DIR     := /usr/local/include
 INC_DIR     += ./src/common

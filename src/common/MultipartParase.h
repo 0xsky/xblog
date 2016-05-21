@@ -12,6 +12,9 @@
 
 using namespace std;
 
+char * strnchr(const char *p, char c, size_t n);
+char * strnstr(const char *s, const char *find, size_t slen);
+
 class MultipartConsumer
 {
 public:
@@ -98,11 +101,9 @@ private:
         log_info("ReadHeaderValue %.*s\n", len, buf);
         char *filename = strnstr(buf, "filename=", len);
         char *nameend = NULL;
-        if (filename)
-        {
+        if (filename) {
             filename += 9;
-            if (filename[0] == '\"')
-            {
+            if (filename[0] == '\"') {
                 filename++;
                 nameend = strnchr(filename, '\"', len - (filename - buf));
                 nameend[0] = '\0';
