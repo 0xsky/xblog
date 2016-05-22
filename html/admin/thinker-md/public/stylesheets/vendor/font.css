@@ -1,0 +1,1068 @@
+@font-face {
+    font-family: 'gly';
+
+    src: url('../fonts/gly-halflings-regular.eot');
+    src: url('../fonts/gly-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/gly-halflings-regular.woff2') format('woff2'), url('../fonts/gly-halflings-regular.woff') format('woff'), url('../fonts/gly-halflings-regular.ttf') format('truetype'), url('../fonts/gly-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+.gly {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'gly';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.gly-asterisk:before {
+    content: "\2a";
+}
+
+.gly-plus:before {
+    content: "\2b";
+}
+
+.gly-euro:before,
+.gly-eur:before {
+    content: "\20ac";
+}
+
+.gly-minus:before {
+    content: "\2212";
+}
+
+.gly-cloud:before {
+    content: "\2601";
+}
+
+.gly-envelope:before {
+    content: "\2709";
+}
+
+.gly-pencil:before {
+    content: "\270f";
+}
+
+.gly-glass:before {
+    content: "\e001";
+}
+
+.gly-music:before {
+    content: "\e002";
+}
+
+.gly-search:before {
+    content: "\e003";
+}
+
+.gly-heart:before {
+    content: "\e005";
+}
+
+.gly-star:before {
+    content: "\e006";
+}
+
+.gly-star-empty:before {
+    content: "\e007";
+}
+
+.gly-user:before {
+    content: "\e008";
+}
+
+.gly-film:before {
+    content: "\e009";
+}
+
+.gly-th-large:before {
+    content: "\e010";
+}
+
+.gly-th:before {
+    content: "\e011";
+}
+
+.gly-th-list:before {
+    content: "\e012";
+}
+
+.gly-ok:before {
+    content: "\e013";
+}
+
+.gly-remove:before {
+    content: "\e014";
+}
+
+.gly-zoom-in:before {
+    content: "\e015";
+}
+
+.gly-zoom-out:before {
+    content: "\e016";
+}
+
+.gly-off:before {
+    content: "\e017";
+}
+
+.gly-signal:before {
+    content: "\e018";
+}
+
+.gly-cog:before {
+    content: "\e019";
+}
+
+.gly-trash:before {
+    content: "\e020";
+}
+
+.gly-home:before {
+    content: "\e021";
+}
+
+.gly-file:before {
+    content: "\e022";
+}
+
+.gly-time:before {
+    content: "\e023";
+}
+
+.gly-road:before {
+    content: "\e024";
+}
+
+.gly-download-alt:before {
+    content: "\e025";
+}
+
+.gly-download:before {
+    content: "\e026";
+}
+
+.gly-upload:before {
+    content: "\e027";
+}
+
+.gly-inbox:before {
+    content: "\e028";
+}
+
+.gly-play-circle:before {
+    content: "\e029";
+}
+
+.gly-repeat:before {
+    content: "\e030";
+}
+
+.gly-refresh:before {
+    content: "\e031";
+}
+
+.gly-list-alt:before {
+    content: "\e032";
+}
+
+.gly-lock:before {
+    content: "\e033";
+}
+
+.gly-flag:before {
+    content: "\e034";
+}
+
+.gly-headphones:before {
+    content: "\e035";
+}
+
+.gly-volume-off:before {
+    content: "\e036";
+}
+
+.gly-volume-down:before {
+    content: "\e037";
+}
+
+.gly-volume-up:before {
+    content: "\e038";
+}
+
+.gly-qrcode:before {
+    content: "\e039";
+}
+
+.gly-barcode:before {
+    content: "\e040";
+}
+
+.gly-tag:before {
+    content: "\e041";
+}
+
+.gly-tags:before {
+    content: "\e042";
+}
+
+.gly-book:before {
+    content: "\e043";
+}
+
+.gly-bookmark:before {
+    content: "\e044";
+}
+
+.gly-print:before {
+    content: "\e045";
+}
+
+.gly-camera:before {
+    content: "\e046";
+}
+
+.gly-font:before {
+    content: "\e047";
+}
+
+.gly-bold:before {
+    content: "\e048";
+}
+
+.gly-italic:before {
+    content: "\e049";
+}
+
+.gly-text-height:before {
+    content: "\e050";
+}
+
+.gly-text-width:before {
+    content: "\e051";
+}
+
+.gly-align-left:before {
+    content: "\e052";
+}
+
+.gly-align-center:before {
+    content: "\e053";
+}
+
+.gly-align-right:before {
+    content: "\e054";
+}
+
+.gly-align-justify:before {
+    content: "\e055";
+}
+
+.gly-list:before {
+    content: "\e056";
+}
+
+.gly-indent-left:before {
+    content: "\e057";
+}
+
+.gly-indent-right:before {
+    content: "\e058";
+}
+
+.gly-facetime-video:before {
+    content: "\e059";
+}
+
+.gly-picture:before {
+    content: "\e060";
+}
+
+.gly-map-marker:before {
+    content: "\e062";
+}
+
+.gly-adjust:before {
+    content: "\e063";
+}
+
+.gly-tint:before {
+    content: "\e064";
+}
+
+.gly-edit:before {
+    content: "\e065";
+}
+
+.gly-share:before {
+    content: "\e066";
+}
+
+.gly-check:before {
+    content: "\e067";
+}
+
+.gly-move:before {
+    content: "\e068";
+}
+
+.gly-step-backward:before {
+    content: "\e069";
+}
+
+.gly-fast-backward:before {
+    content: "\e070";
+}
+
+.gly-backward:before {
+    content: "\e071";
+}
+
+.gly-play:before {
+    content: "\e072";
+}
+
+.gly-pause:before {
+    content: "\e073";
+}
+
+.gly-stop:before {
+    content: "\e074";
+}
+
+.gly-forward:before {
+    content: "\e075";
+}
+
+.gly-fast-forward:before {
+    content: "\e076";
+}
+
+.gly-step-forward:before {
+    content: "\e077";
+}
+
+.gly-eject:before {
+    content: "\e078";
+}
+
+.gly-chevron-left:before {
+    content: "\e079";
+}
+
+.gly-chevron-right:before {
+    content: "\e080";
+}
+
+.gly-plus-sign:before {
+    content: "\e081";
+}
+
+.gly-minus-sign:before {
+    content: "\e082";
+}
+
+.gly-remove-sign:before {
+    content: "\e083";
+}
+
+.gly-ok-sign:before {
+    content: "\e084";
+}
+
+.gly-question-sign:before {
+    content: "\e085";
+}
+
+.gly-info-sign:before {
+    content: "\e086";
+}
+
+.gly-screenshot:before {
+    content: "\e087";
+}
+
+.gly-remove-circle:before {
+    content: "\e088";
+}
+
+.gly-ok-circle:before {
+    content: "\e089";
+}
+
+.gly-ban-circle:before {
+    content: "\e090";
+}
+
+.gly-arrow-left:before {
+    content: "\e091";
+}
+
+.gly-arrow-right:before {
+    content: "\e092";
+}
+
+.gly-arrow-up:before {
+    content: "\e093";
+}
+
+.gly-arrow-down:before {
+    content: "\e094";
+}
+
+.gly-share-alt:before {
+    content: "\e095";
+}
+
+.gly-resize-full:before {
+    content: "\e096";
+}
+
+.gly-resize-small:before {
+    content: "\e097";
+}
+
+.gly-exclamation-sign:before {
+    content: "\e101";
+}
+
+.gly-gift:before {
+    content: "\e102";
+}
+
+.gly-leaf:before {
+    content: "\e103";
+}
+
+.gly-fire:before {
+    content: "\e104";
+}
+
+.gly-eye-open:before {
+    content: "\e105";
+}
+
+.gly-eye-close:before {
+    content: "\e106";
+}
+
+.gly-warning-sign:before {
+    content: "\e107";
+}
+
+.gly-plane:before {
+    content: "\e108";
+}
+
+.gly-calendar:before {
+    content: "\e109";
+}
+
+.gly-random:before {
+    content: "\e110";
+}
+
+.gly-comment:before {
+    content: "\e111";
+}
+
+.gly-magnet:before {
+    content: "\e112";
+}
+
+.gly-chevron-up:before {
+    content: "\e113";
+}
+
+.gly-chevron-down:before {
+    content: "\e114";
+}
+
+.gly-retweet:before {
+    content: "\e115";
+}
+
+.gly-shopping-cart:before {
+    content: "\e116";
+}
+
+.gly-folder-close:before {
+    content: "\e117";
+}
+
+.gly-folder-open:before {
+    content: "\e118";
+}
+
+.gly-resize-vertical:before {
+    content: "\e119";
+}
+
+.gly-resize-horizontal:before {
+    content: "\e120";
+}
+
+.gly-hdd:before {
+    content: "\e121";
+}
+
+.gly-bullhorn:before {
+    content: "\e122";
+}
+
+.gly-bell:before {
+    content: "\e123";
+}
+
+.gly-certificate:before {
+    content: "\e124";
+}
+
+.gly-thumbs-up:before {
+    content: "\e125";
+}
+
+.gly-thumbs-down:before {
+    content: "\e126";
+}
+
+.gly-hand-right:before {
+    content: "\e127";
+}
+
+.gly-hand-left:before {
+    content: "\e128";
+}
+
+.gly-hand-up:before {
+    content: "\e129";
+}
+
+.gly-hand-down:before {
+    content: "\e130";
+}
+
+.gly-circle-arrow-right:before {
+    content: "\e131";
+}
+
+.gly-circle-arrow-left:before {
+    content: "\e132";
+}
+
+.gly-circle-arrow-up:before {
+    content: "\e133";
+}
+
+.gly-circle-arrow-down:before {
+    content: "\e134";
+}
+
+.gly-globe:before {
+    content: "\e135";
+}
+
+.gly-wrench:before {
+    content: "\e136";
+}
+
+.gly-tasks:before {
+    content: "\e137";
+}
+
+.gly-filter:before {
+    content: "\e138";
+}
+
+.gly-briefcase:before {
+    content: "\e139";
+}
+
+.gly-fullscreen:before {
+    content: "\e140";
+}
+
+.gly-dashboard:before {
+    content: "\e141";
+}
+
+.gly-paperclip:before {
+    content: "\e142";
+}
+
+.gly-heart-empty:before {
+    content: "\e143";
+}
+
+.gly-link:before {
+    content: "\e144";
+}
+
+.gly-phone:before {
+    content: "\e145";
+}
+
+.gly-pushpin:before {
+    content: "\e146";
+}
+
+.gly-usd:before {
+    content: "\e148";
+}
+
+.gly-gbp:before {
+    content: "\e149";
+}
+
+.gly-sort:before {
+    content: "\e150";
+}
+
+.gly-sort-by-alphabet:before {
+    content: "\e151";
+}
+
+.gly-sort-by-alphabet-alt:before {
+    content: "\e152";
+}
+
+.gly-sort-by-order:before {
+    content: "\e153";
+}
+
+.gly-sort-by-order-alt:before {
+    content: "\e154";
+}
+
+.gly-sort-by-attributes:before {
+    content: "\e155";
+}
+
+.gly-sort-by-attributes-alt:before {
+    content: "\e156";
+}
+
+.gly-unchecked:before {
+    content: "\e157";
+}
+
+.gly-expand:before {
+    content: "\e158";
+}
+
+.gly-collapse-down:before {
+    content: "\e159";
+}
+
+.gly-collapse-up:before {
+    content: "\e160";
+}
+
+.gly-log-in:before {
+    content: "\e161";
+}
+
+.gly-flash:before {
+    content: "\e162";
+}
+
+.gly-log-out:before {
+    content: "\e163";
+}
+
+.gly-new-window:before {
+    content: "\e164";
+}
+
+.gly-record:before {
+    content: "\e165";
+}
+
+.gly-save:before {
+    content: "\e166";
+}
+
+.gly-open:before {
+    content: "\e167";
+}
+
+.gly-saved:before {
+    content: "\e168";
+}
+
+.gly-import:before {
+    content: "\e169";
+}
+
+.gly-export:before {
+    content: "\e170";
+}
+
+.gly-send:before {
+    content: "\e171";
+}
+
+.gly-floppy-disk:before {
+    content: "\e172";
+}
+
+.gly-floppy-saved:before {
+    content: "\e173";
+}
+
+.gly-floppy-remove:before {
+    content: "\e174";
+}
+
+.gly-floppy-save:before {
+    content: "\e175";
+}
+
+.gly-floppy-open:before {
+    content: "\e176";
+}
+
+.gly-credit-card:before {
+    content: "\e177";
+}
+
+.gly-transfer:before {
+    content: "\e178";
+}
+
+.gly-cutlery:before {
+    content: "\e179";
+}
+
+.gly-header:before {
+    content: "\e180";
+}
+
+.gly-compressed:before {
+    content: "\e181";
+}
+
+.gly-earphone:before {
+    content: "\e182";
+}
+
+.gly-phone-alt:before {
+    content: "\e183";
+}
+
+.gly-tower:before {
+    content: "\e184";
+}
+
+.gly-stats:before {
+    content: "\e185";
+}
+
+.gly-sd-video:before {
+    content: "\e186";
+}
+
+.gly-hd-video:before {
+    content: "\e187";
+}
+
+.gly-subtitles:before {
+    content: "\e188";
+}
+
+.gly-sound-stereo:before {
+    content: "\e189";
+}
+
+.gly-sound-dolby:before {
+    content: "\e190";
+}
+
+.gly-sound-5-1:before {
+    content: "\e191";
+}
+
+.gly-sound-6-1:before {
+    content: "\e192";
+}
+
+.gly-sound-7-1:before {
+    content: "\e193";
+}
+
+.gly-copyright-mark:before {
+    content: "\e194";
+}
+
+.gly-registration-mark:before {
+    content: "\e195";
+}
+
+.gly-cloud-download:before {
+    content: "\e197";
+}
+
+.gly-cloud-upload:before {
+    content: "\e198";
+}
+
+.gly-tree-conifer:before {
+    content: "\e199";
+}
+
+.gly-tree-deciduous:before {
+    content: "\e200";
+}
+
+.gly-cd:before {
+    content: "\e201";
+}
+
+.gly-save-file:before {
+    content: "\e202";
+}
+
+.gly-open-file:before {
+    content: "\e203";
+}
+
+.gly-level-up:before {
+    content: "\e204";
+}
+
+.gly-copy:before {
+    content: "\e205";
+}
+
+.gly-paste:before {
+    content: "\e206";
+}
+
+.gly-alert:before {
+    content: "\e209";
+}
+
+.gly-equalizer:before {
+    content: "\e210";
+}
+
+.gly-king:before {
+    content: "\e211";
+}
+
+.gly-queen:before {
+    content: "\e212";
+}
+
+.gly-pawn:before {
+    content: "\e213";
+}
+
+.gly-bishop:before {
+    content: "\e214";
+}
+
+.gly-knight:before {
+    content: "\e215";
+}
+
+.gly-baby-formula:before {
+    content: "\e216";
+}
+
+.gly-tent:before {
+    content: "\26fa";
+}
+
+.gly-blackboard:before {
+    content: "\e218";
+}
+
+.gly-bed:before {
+    content: "\e219";
+}
+
+.gly-apple:before {
+    content: "\f8ff";
+}
+
+.gly-erase:before {
+    content: "\e221";
+}
+
+.gly-hourglass:before {
+    content: "\231b";
+}
+
+.gly-lamp:before {
+    content: "\e223";
+}
+
+.gly-duplicate:before {
+    content: "\e224";
+}
+
+.gly-piggy-bank:before {
+    content: "\e225";
+}
+
+.gly-scissors:before {
+    content: "\e226";
+}
+
+.gly-bitcoin:before {
+    content: "\e227";
+}
+
+.gly-btc:before {
+    content: "\e227";
+}
+
+.gly-xbt:before {
+    content: "\e227";
+}
+
+.gly-yen:before {
+    content: "\00a5";
+}
+
+.gly-jpy:before {
+    content: "\00a5";
+}
+
+.gly-ruble:before {
+    content: "\20bd";
+}
+
+.gly-rub:before {
+    content: "\20bd";
+}
+
+.gly-scale:before {
+    content: "\e230";
+}
+
+.gly-ice-lolly:before {
+    content: "\e231";
+}
+
+.gly-ice-lolly-tasted:before {
+    content: "\e232";
+}
+
+.gly-education:before {
+    content: "\e233";
+}
+
+.gly-option-horizontal:before {
+    content: "\e234";
+}
+
+.gly-option-vertical:before {
+    content: "\e235";
+}
+
+.gly-menu-hamburger:before {
+    content: "\e236";
+}
+
+.gly-modal-window:before {
+    content: "\e237";
+}
+
+.gly-oil:before {
+    content: "\e238";
+}
+
+.gly-grain:before {
+    content: "\e239";
+}
+
+.gly-sunglasses:before {
+    content: "\e240";
+}
+
+.gly-text-size:before {
+    content: "\e241";
+}
+
+.gly-text-color:before {
+    content: "\e242";
+}
+
+.gly-text-background:before {
+    content: "\e243";
+}
+
+.gly-object-align-top:before {
+    content: "\e244";
+}
+
+.gly-object-align-bottom:before {
+    content: "\e245";
+}
+
+.gly-object-align-horizontal:before {
+    content: "\e246";
+}
+
+.gly-object-align-left:before {
+    content: "\e247";
+}
+
+.gly-object-align-vertical:before {
+    content: "\e248";
+}
+
+.gly-object-align-right:before {
+    content: "\e249";
+}
+
+.gly-triangle-right:before {
+    content: "\e250";
+}
+
+.gly-triangle-left:before {
+    content: "\e251";
+}
+
+.gly-triangle-bottom:before {
+    content: "\e252";
+}
+
+.gly-triangle-top:before {
+    content: "\e253";
+}
+
+.gly-console:before {
+    content: "\e254";
+}
+
+.gly-superscript:before {
+    content: "\e255";
+}
+
+.gly-subscript:before {
+    content: "\e256";
+}
+
+.gly-menu-left:before {
+    content: "\e257";
+}
+
+.gly-menu-right:before {
+    content: "\e258";
+}
+
+.gly-menu-down:before {
+    content: "\e259";
+}
+
+.gly-menu-up:before {
+    content: "\e260";
+}

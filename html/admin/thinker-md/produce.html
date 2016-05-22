@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Thinker-MD</title>
+</head>
+<body>
+<textarea name="content" rows="10" placeholder="这里输入内容,支持Markdown语法."></textarea>
+<style type="text/css" scoped="scoped">
+    @import "dist/stylesheets/thinker-md.user.css";
+    @import "dist/stylesheets/thinker-md.vendor.css";
+    @import "dist/emoji/nature.css";
+    @import "dist/emoji/object.css";
+    @import "dist/emoji/people.css";
+    @import "dist/emoji/place.css";
+    @import "dist/emoji/Sysmbols.css";
+    @import "dist/emoji/twemoji.css";
+</style>
+<script type="text/javascript" charset="utf-8" src="dist/javascripts/jquery-2.1.3.js"></script>
+<script type="text/javascript" charset="utf-8" src="dist/javascripts/thinker-md.vendor.min.js"></script>
+<script>
+    $("textarea").markdown({
+        language: 'zh',
+        fullscreen: {
+            enable: true
+        },
+        resize: 'vertical',
+        localStorage: 'md',
+        imgurl: '/c/imgUpload',
+        base64url: '/c/imgUpload',
+        flowChart : true
+    });
+</script>
+</body>
+</html>

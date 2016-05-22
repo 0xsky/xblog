@@ -18,6 +18,18 @@
         tr:hover{background: #eee;}
         th,td{border: 1px solid #888; padding:2px 6px 2px 6px;}
     </style>
+	<style type="text/css">    
+        @import "thinker-md/public/stylesheets/vendor/font.css";
+        @import "thinker-md/public/stylesheets/vendor/markdown.css";
+        @import "thinker-md/public/stylesheets/emoji/nature.css";
+        @import "thinker-md/public/stylesheets/emoji/object.css";
+        @import "thinker-md/public/stylesheets/emoji/people.css";
+        @import "thinker-md/public/stylesheets/emoji/place.css";
+        @import "thinker-md/public/stylesheets/emoji/Sysmbols.css";
+        @import "thinker-md/public/stylesheets/emoji/twemoji.css";
+        @import "thinker-md/public/stylesheets/vendor/font-awesome.css";
+        @import "thinker-md/public/stylesheets/vendor/sunburst.css";
+    </style>
 
     <!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="css/ie.css" /><![endif]-->
 </head>
@@ -163,9 +175,9 @@
                             <form method="post" action="/admin_post?action=new_post">文章标题: 
                             <input type="text" name="title" size="100"/>
                             <div id="select-classify"></div>
-                            <textarea class="editme"  id='ha' name="content" rows="50" Style="width:30%;margin-left:25px; "></textarea>
+                            <textarea class="editme-content"  id='tab-9-content' name="content" rows="50"></textarea>
                             <br>编辑文章摘要<br>
-                            <textarea class="editme2"  id="htmlbox_icon_set_blue" name="brief" rows="5" Style="width:30%;margin-left:25px;">
+                            <textarea class="editme-brief"  id="tab-9-brief" name="brief" rows="5">
                             这里编辑文章摘要...</textarea>
                             <input type="submit" name="blog" value="提交"  class="wymupdate" />
                             </form>
@@ -233,5 +245,22 @@
             <span class="shadow"></span>
         </aside>
     </div>
+	
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/underscore/underscore-min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/raphael/raphael.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/sequence-diagram/sequence-diagram-min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/flowchart/flowchart.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/flowchart/jquery.flowchart.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/highlight/highlight.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/markdown/he.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/markdown/marked.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/markdown/to-markdown.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/markdown/jsHtmlToText.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/markdown/tab.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/markdown/config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/markdown/emoji.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/markdown/bootstrap-markdown.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/public/javascripts/vendor/markdown/locale/bootstrap-markdown.zh.js"></script>
+<script type="text/javascript" charset="utf-8" src="/admin/thinker-md/config.js"></script>
 </body>
 </html>
