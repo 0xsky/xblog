@@ -401,7 +401,7 @@ function onEditPost(id)
     $.get("/admin_post?action=edit&id="+id,function(data, textStatus) {
         $("#edit_area").show();
         $("#post_edit_title").val(data[0].post_title);
-        $("#post_edit_id").html('('+data[0].ID+')');
+        $("#post_edit_id").html(data[0].ID);
         tinyMCE.get('post_edit_post').setContent(data[0].post_content);
         tinyMCE.get('post_edit_brief').setContent(data[0].post_brief);
         post_classify_id = data[0].post_classify;
@@ -427,11 +427,11 @@ function onEditPost(id)
 }
 
 function update_post(){ 
-    var strid = $("#post_edit_id").val();
+    var strid = $("#post_edit_id").text();
     var strtitle = $("#post_edit_title").val();
-    var strclassify= $("#post_edit_select_classify").val();
-    var strcontent= $("#post_edit_post").html();
-    var strbrief= $("#post_edit_brief").val();
+    var strclassify = $("select[name='classify']").val() ;//= $("#post_edit_select_classify").val();
+    var strcontent= tinyMCE.get("post_edit_post").getContent();
+    var strbrief= tinyMCE.get("post_edit_brief").getContent();
 
     $.ajax({
         type: "POST",
@@ -439,7 +439,11 @@ function update_post(){
         data: {"id":strid,"classify":strclassify,"title":strtitle,"content":strcontent,"brief":strbrief,},
         success: function(msg){
             $("#post_edit_result").html(msg);
-    }
+        },
+        error: function(msg)
+        {
+            $("#post_edit_result").html(msg);
+        }
     });
 }
 
