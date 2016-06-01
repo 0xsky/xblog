@@ -157,17 +157,18 @@ jQuery(function(){
     });
     
     // 站点配置更新
-    $("#BTwebconfigUpdate").live("click",function(){
+    $(".BTwebconfigUpdate").live("click",function(){
         var updateURL = "/siteconfig?action=update";
-        var strKey = $(this).parents("tr").find("input")[0].id;
-        var strValue= $(this).parents("tr").find("input")[0].value;
+        var strKey = $(this).parents("tr").find("input").attr('name');
+        var strValue= $(this).parents("tr").find("input").val();
+
         $.ajax({
             type: "POST",
             url: updateURL,
             data: {"id":strKey,"value":strValue},
             success: function(msg){
                 alert(msg);
-        }
+            }
         });
     });
     
@@ -543,7 +544,7 @@ function GetWebConfig(){
         for ( var p in config ) {
            strhtml += "<tr><td>"+p+"</td>";
            strhtml += "<td><input id='"+config[p]+"' size='80' type='text' name='"+p+"' value='"+config[p]+"' /></td>";
-           strhtml += "<td><input type='submit' value='update' id='BTwebconfigUpdate'></td></tr>";
+           strhtml += "<td><input type='submit' value='update' class='BTwebconfigUpdate'></td></tr>";
         }
         strhtml+="</table>";
         $("#webconfig").append(strhtml);
