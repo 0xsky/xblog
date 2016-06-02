@@ -87,7 +87,6 @@ private:
     static void ConfigCallback(struct evhttp_request *req, void *arg);
     static void PostviewCallback(struct evhttp_request *req, void *arg);
     static void PagingCallback(struct evhttp_request *req, void *arg);
-    static void UEControllerCallback(struct evhttp_request *req, void *arg);
     static void InfopageRequestCallback(struct evhttp_request *req, void *arg);
 
 private:
