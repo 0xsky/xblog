@@ -1,6 +1,6 @@
-xblog
+xblogmini版
 =====
-xBlog is a simple, high-speed, customizable blog app developed by C++
+xBlogmini is a simple, high-speed, customizable blog app developed by C++
 <p>
 <b>Simple:</b> Simple and compact design, the main program environment to support only a single executable file without HTTPD, PHP, etc.. <p>
 <b>High speed:</b> pure C + + development, support for multi-threading, MYSQL connection pooling support, and support for hot data cache. <p>
@@ -8,12 +8,12 @@ xBlog is a simple, high-speed, customizable blog app developed by C++
 <b>Multi-platform:</b> C / C + + development, the perfect support for LINUX, WINDOWS, Raspberry Pi and other platforms. . 
 
 ====
-<p>欢迎使用xBlog系统
+<p>欢迎使用xblogmini系统
 <p>C++打造的简单高速可定制博客
 <p><p>
 <p>简单 : 设计简单小巧，主程序仅一个可执行文件.无需HTTPD，PHP等环境支持。
-<p>高速 : 纯C++开发，支持多线程，支持MYSQL连接池，并支持热点数据缓存。
-<p>灵活：丰富的定制特性，灵活的页面模块、基于xhtml+css的模板架构，充分给予用户自定义的权利。.
+<p>高速 : 纯C++开发，支持多线程，支持MYSQL连接池。
+<p>灵活：丰富的定制特性，灵活的页面模块、基于异步ajax+xhtml+css的模板架构，充分给予用户自定义的权利。.
 <p>多平台: C/C++开发，完美支持LINUX，WINDOWS，Raspberry Pi 等平台。.
 <p>
 <p>demo: <a href="http://yun.0xsky.com:8080/"  target="_blank" >xBlog Demo</a> <a href="http://yun.0xsky.com:8080/admin"  target="_blank">测试后台(登陆[USER:xsky/PASS:123456])</a>
