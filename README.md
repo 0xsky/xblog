@@ -27,7 +27,7 @@ xBlogmini is a simple, high-speed, customizable blog app developed by C++
       yum install mysql-devel libevent 
       apt-get install libevent-dev libmysqlclient-dev
     2.编译 xblog
-      svn co https://github.com/0xsky/xblog.git xblog
+      svn co https://github.com/0xsky/xblog/tree/xblogmini xblog
       make
     3.配置&运行
       将 /doc 目录内的 xblog_dev.sql 导入到MYSQL数据库
