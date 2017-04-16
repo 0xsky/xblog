@@ -23,7 +23,7 @@ xBlog is a simple, high-speed, customizable blog app developed by C++
 <p>捐赠作者:[支付宝账号] guozhw@gmail.com
 <hr>
 
-###安装 xBlog
+### 安装 xBlog
     1.安装 libevent
       yum install mysql-devel libevent 
       apt-get install libevent-dev libmysqlclient-dev
